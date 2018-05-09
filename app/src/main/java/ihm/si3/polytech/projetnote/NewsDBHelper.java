@@ -1,7 +1,6 @@
 package ihm.si3.polytech.projetnote;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -85,10 +83,10 @@ public class NewsDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("INSERT INTO mishap (id,name,state,priority,dateStart,dateEnd,description,idDeclarant,place,tag) VALUES(1,'salut mamene','TODO','HIGH','08.11.1997','08.11.1997','probleme dans la douche+" +
-                "fererr',1,'Maison','test')");
+        db.execSQL("DROP TABLE IF EXISTS mishap");
+
         final String SQL_CREATE_MISHAP_TABLE = "CREATE TABLE mishap (\n" +
-                "\tid INT PRIMARY KEY ,\n" +
+                "\tid INT PRIMARY KEY AUTOINCREMENT,\n" +
                 "\tname VARCHAR(20) NOT NULL,\n" +
                 "\tstate VARCHAR(20) NOT NULL CHECK (state IN ('TODO','INPROGRESS','DONE')),\n" +
                 "\tpriority VARCHAR(20) NOT NULL CHECK (priority IN ('HIGH','LOW','MEDIUM','MAJOR','CRITICAL')),\n" +
@@ -110,28 +108,13 @@ public class NewsDBHelper extends SQLiteOpenHelper {
     }
 
     public List<Mishap> getAllArticles() {
-        ArrayList<Mishap> articles = new ArrayList<>();
-        Cursor cursor = myDataBase.rawQuery("SELECT * FROM mishap ", null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            Mishap newArticle = new Mishap(
-                    cursor.getInt(7),
-                    cursor.getString(1),
-                    cursor.getString(6),
-                    cursor.getString(7),
-                    cursor.getString(4),
-                    State.values()[cursor.getInt(2)],
-                    Priority.values()[cursor.getInt(1)],
-                    cursor.getString(5),
-                    cursor.getString(4)
 
-            );
-            articles.add(newArticle);
+        return null;
+    }
 
-            cursor.moveToNext();
-        }
-        cursor.close();
-
-        return articles;
+    public void addMishap(Mishap mishap) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("INSERT INTO mishap (name,state,priority,dateStart,dateEnd,description,idDeclarant,place,tag) VALUES('salut mamene','TODO','HIGH','08.11.1997','08.11.1997','probleme dans la douche+" +
+                "fererr',1,'Maison','test')");
     }
 }

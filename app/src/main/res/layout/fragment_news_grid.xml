@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:paddingTop="25dp"
         android:text="@string/textKey" />
 </RelativeLayout>

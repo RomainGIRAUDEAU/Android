@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "916347297386",
+    "firebase_url": "https://mishap-5675a.firebaseio.com",
+    "project_id": "mishap-5675a",
+    "storage_bucket": "mishap-5675a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916347297386:android:9f816ff67d51d663",
+        "android_client_info": {
+          "package_name": "ihm.si3.polytech.projetnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916347297386-vletrbvctt94d4lmj2q5df1lvgnr9kmq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJWf29JF9nMDkhXJ7cfozMLNX0N91OoZ8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

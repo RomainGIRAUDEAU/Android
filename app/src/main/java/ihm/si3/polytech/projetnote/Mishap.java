@@ -5,7 +5,7 @@ package ihm.si3.polytech.projetnote;
  */
 
 public class Mishap {
-    private int id;
+
     private String title;
     private String text;
     private String author;
@@ -16,30 +16,80 @@ public class Mishap {
     private String dateEnd;
     private String place;
 
-    public Mishap(int id, String title, String text, String author, String date
-            , State state, Priority priority, String dateStart, String dateEnd) {
-        this.id = id;
-        this.title = title;
-        this.text = text;
-        this.author = author;
-        this.state = state;
-        this.priority = priority;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public Mishap() {
+
 
     }
 
-    @Override
-    public String toString() {
-        return title + " (" + author + ", " + date + ")";
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getText() {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public String getTitle() {
         return title;
     }
 
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public String getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(String dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public String getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
 }

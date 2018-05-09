@@ -5,11 +5,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class FooFragment extends Fragment {
 
 
     private static final String ARG_SECTION_NUMBER = "1";
+
+    private DatabaseReference databaseReference;
+
+
 
 
     public FooFragment() {
@@ -34,14 +44,38 @@ public class FooFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        return inflater.inflate(R.layout.fragment_formulaire, parent, false);
+        return inflater.inflate(R.layout.recipe, parent, false);
     }
 
     // This event is triggered soon after onCreateView().
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Setup any handles to view objects here
-        // EditText etFoo = (EditText) view.findViewById(R.id.etFoo);
+        Button button = getActivity().findViewById(R.id.valider);
+
+        button.setOnClickListener(new View.OnClickListener() // do something on click
+        {
+            public void onClick(View v) {
+
+                TextView title = getActivity().findViewById(R.id.title);
+                TextView description = getActivity().findViewById(R.id.descriptionArticle);
+                Mishap mishap = new Mishap();
+                mishap.setTitle(title.getText().toString().trim());
+                mishap.setTitle(description.getText().toString().trim());
+
+                databaseReference = FirebaseDatabase.getInstance().getReference();
+                databaseReference.child("mishap").setValue(mishap);
+                Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
+
+
+            }
+        });
     }
+
+    private void saveMishap() {
+
+    }
+
+
+
 }

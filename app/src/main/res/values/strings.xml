@@ -9,5 +9,17 @@
     <string name="feedbacktitle">feedBackTitle</string>
     <string name="feedbackname">feedBackName</string>
     <string name="feedbackemail">test</string>
+    <string name="title">title</string>
+    <string name="pirates" />
+    <string name="ninjas" />
+    <string name="priority">priority</string>
+
+    <!--Other string resources also defined in this file… -->
+    <string name="priority1">HIGH</string>
+    <string name="priority2">LOW</string>
+    <string name="priority3">MEDIUM</string>
+    <string name="priority4">MAJOR</string>
+    <string name="priority5">CRITICAL</string>
+
 
 </resources>

@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             if (position == 0) return NewsGridFragment.newInstance();
             if (position == 1) return FooFragment.newInstance();
+            if (position == 2) return SignIn.newInstance();
 
 
             //getItem is called to instantiate the fragment for the given page.

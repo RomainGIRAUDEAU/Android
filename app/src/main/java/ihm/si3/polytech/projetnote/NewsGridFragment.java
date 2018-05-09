@@ -6,6 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +51,24 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        NewsDBHelper newsDBHelper = new NewsDBHelper(this.getContext());
-        newsDBHelper.createDataBase();
-        newsDBHelper.openDataBase();
-        articleList = newsDBHelper.getAllArticles();
-        newsDBHelper.close();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Mishap climate = postSnapshot.getValue(Mishap.class);
+                    articleList.add(climate);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                /*
+                 * You may print the error message.
+                 **/
+            }
+        });
+
 
         GridView gridView = getView().findViewById(R.id.listArticle);
         gridView.setAdapter(new NewCustomAdapter(this.getContext(), articleList));
