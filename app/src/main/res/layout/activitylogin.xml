@@ -12,72 +12,25 @@
         android:paddingRight="24dp"
         android:paddingTop="56dp">
 
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.Toolbar>
-
         <TextView
+            style="@style/TextAppearance.AppCompat.Title"
             android:id="@id/info"
+            android:shadowColor="@color/colorPrimary"
+            android:text="Veuillez vous connecter sur votre google compte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/info" />
+            android:textColor="@color/colorPrimary" />
 
 
         <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/input_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/btn_login"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="24dp"
-            android:padding="12dp"
-            android:text="Login" />
-
-        <TextView
-            android:id="@+id/link_signup"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="No account yet? Create one"
-            android:textSize="16dip" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/signUp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.google.android.gms.common.SignInButton>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"></com.google.android.gms.common.SignInButton>
 
     </LinearLayout>
 </ScrollView>

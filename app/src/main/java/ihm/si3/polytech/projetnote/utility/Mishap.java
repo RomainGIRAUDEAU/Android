@@ -15,10 +15,19 @@ public class Mishap {
     private String dateStart;
     private String dateEnd;
     private String place;
+    private String urlPicture;
 
     public Mishap() {
 
 
+    }
+
+    public String getUrlPicture() {
+        return urlPicture;
+    }
+
+    public void setUrlPicture(String urlPicture) {
+        this.urlPicture = urlPicture;
     }
 
     public void setTitle(String title) {

@@ -194,12 +194,9 @@ public class SignIn extends Activity {
 
 
         if (user != null) {
-            //   mStatusTextView.setText(user.getEmail());
-            // Toast.makeText(getApplicationContext(),user.getEmail(),Toast.LENGTH_LONG);
-            System.out.println(user.getDisplayName());
-            System.out.println(user.getEmail());
-            System.out.println(user.getPhoneNumber());
-            System.out.println(user.getPhotoUrl());
+            StoreUsers.setMailAdress(user.getEmail());
+            StoreUsers.setUrlPicture(user.getPhotoUrl().toString());
+            StoreUsers.setUserName(user.getDisplayName());
 
 
         } else {

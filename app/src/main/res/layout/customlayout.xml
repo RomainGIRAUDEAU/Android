@@ -2,50 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:verticalSpacing="2dp">
+        android:id="@+id/cv">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="175dp">
+            android:layout_height="204dp"
+            android:padding="16dp">
 
             <ImageView
-                android:id="@+id/article_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="false"
-                android:cropToPadding="true"
-                android:scaleType="centerCrop"
-                app:srcCompat="@android:drawable/ic_menu_report_image" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="3dp">
+                android:id="@+id/card_mishap"
+                android:layout_width="81dp"
+                android:layout_height="94dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp" />
 
             <TextView
-                android:id="@+id/titleArticle"
-                android:layout_width="match_parent"
+                android:id="@+id/card_title"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="TextView"
-                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/card_mishap"
+                android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/descriptionArticle"
-                android:layout_width="match_parent"
+                android:id="@+id/card_description"
+                android:layout_width="234dp"
+                android:layout_height="35dp"
+                android:layout_below="@+id/card_title"
+                android:layout_toRightOf="@+id/card_mishap" />
+
+            <ImageView
+                android:id="@+id/person_picture"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="TextView"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_alignBottom="@+id/person_username"
+                android:layout_alignEnd="@+id/card_mishap"
+                app:srcCompat="@android:drawable/stat_sys_upload" />
+
+            <TextView
+                android:id="@+id/person_username"
+                android:layout_width="234dp"
+                android:layout_height="35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/card_title"
+                android:layout_marginBottom="43dp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>
-

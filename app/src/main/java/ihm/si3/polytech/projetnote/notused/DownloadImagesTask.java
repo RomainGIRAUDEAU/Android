@@ -20,7 +20,7 @@ public class DownloadImagesTask extends AsyncTask<String, Void, Bitmap> {
     Map<String, Bitmap> storedImage;
     private ImageView imageView;
 
-    DownloadImagesTask(ImageView imageView) {
+    public DownloadImagesTask(ImageView imageView) {
         this.imageView = imageView;
         storedImage = new HashMap<>();
     }

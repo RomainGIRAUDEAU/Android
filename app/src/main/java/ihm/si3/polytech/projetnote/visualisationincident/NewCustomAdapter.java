@@ -8,14 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import ihm.si3.polytech.projetnote.R;
+import ihm.si3.polytech.projetnote.login.StoreUsers;
+import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 
 
@@ -26,28 +23,9 @@ import ihm.si3.polytech.projetnote.utility.Mishap;
 public class NewCustomAdapter extends ArrayAdapter<Mishap> {
 
     public NewCustomAdapter(Context context, List<Mishap> articles) {
-        super(context, 0, articles);
+        super(context, R.layout.customlayout, articles);
 
 
-    }
-
-    /**
-     * URI parameters parser from https://stackoverflow.com/a/13592567/5248987
-     *
-     * @param url The URL to parse
-     * @return A Map containing the parameter names and values
-     * @throws UnsupportedEncodingException If the URL encoding isn't supported
-     * @author Pr0gr4mm3r @stackoverflow.com
-     */
-    private static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
-        String query = url.getQuery();
-        String[] pairs = query.split("&");
-        for (String pair : pairs) {
-            int idx = pair.indexOf("=");
-            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
-        }
-        return query_pairs;
     }
 
     @Override
@@ -59,10 +37,21 @@ public class NewCustomAdapter extends ArrayAdapter<Mishap> {
             convertView = inflater.inflate(R.layout.customlayout, null);
         }
 
-        ImageView imageArticle = convertView.findViewById(R.id.article_image);
-        TextView titleAricle = convertView.findViewById(R.id.titleArticle);
+        TextView titleAricle = convertView.findViewById(R.id.card_title);
+        TextView description = convertView.findViewById(R.id.card_description);
+        TextView author = convertView.findViewById(R.id.person_username);
+        ImageView imageArticle = convertView.findViewById(R.id.card_mishap);
+        ImageView imageAuthor = convertView.findViewById(R.id.person_picture);
+
+
         Mishap currentMishap = getItem(position);
         titleAricle.setText(currentMishap.getTitle());
+        description.setText(currentMishap.getDescription());
+        author.setText(currentMishap.getAuthor());
+
+
+        DownloadImagesTask downloadImagesTask = new DownloadImagesTask(imageArticle);
+        downloadImagesTask.execute(StoreUsers.getUrlPicture());
 
        /* if( getItem(position).getMedia() == Priority.CRITICAL) {
 
@@ -91,10 +80,6 @@ public class NewCustomAdapter extends ArrayAdapter<Mishap> {
 
         }
         */
-        TextView descr = convertView.findViewById(R.id.descriptionArticle);
-        descr.setText(getItem(position).getDescription());
-
-
 
 
         return convertView;

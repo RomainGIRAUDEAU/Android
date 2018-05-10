@@ -29,21 +29,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
     public NewsGridFragment() {
         articleList = new ArrayList<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Mishap climate = postSnapshot.getValue(Mishap.class);
-                    articleList.add(climate);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                System.out.println("firebase error :" + firebaseError.getDetails());
-            }
-        });
 
     }
 
@@ -72,9 +58,25 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
+        final GridView gridView = getView().findViewById(R.id.listArticle);
 
-        GridView gridView = getView().findViewById(R.id.listArticle);
-        gridView.setAdapter(new NewCustomAdapter(this.getContext(), articleList));
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                articleList = new ArrayList<>();
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Mishap climate = postSnapshot.getValue(Mishap.class);
+                    articleList.add(climate);
+                }
+                gridView.setAdapter(new NewCustomAdapter(getContext(), articleList));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("firebase error :" + firebaseError.getDetails());
+            }
+        });
 
 
     }

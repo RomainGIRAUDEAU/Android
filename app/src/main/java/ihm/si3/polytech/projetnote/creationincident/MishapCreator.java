@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import ihm.si3.polytech.projetnote.R;
+import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
 
@@ -67,6 +68,8 @@ public class MishapCreator extends Fragment {
                 mishap.setTitle(title.getText().toString().trim());
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
+                mishap.setAuthor(StoreUsers.getUserName());
+                mishap.setUrlPicture(StoreUsers.getUrlPicture());
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
 
