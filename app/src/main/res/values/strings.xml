@@ -20,6 +20,9 @@
     <string name="priority3">MEDIUM</string>
     <string name="priority4">MAJOR</string>
     <string name="priority5">CRITICAL</string>
+    <string name="sign_out">sign_out</string>
+    <string name="disconnect">disconnect</string>
+    <string name="info" />
 
 
 </resources>

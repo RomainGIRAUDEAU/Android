@@ -1,5 +1,6 @@
 package ihm.si3.polytech.projetnote;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,11 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import ihm.si3.polytech.projetnote.creationincident.MishapCreator;
+import ihm.si3.polytech.projetnote.login.SignIn;
+import ihm.si3.polytech.projetnote.notused.PlaceholderFragment;
+import ihm.si3.polytech.projetnote.visualisationincident.NewsGridFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,13 +37,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    private boolean doItFirst = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        launchActivity();
+
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -52,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    private void launchActivity() {
+
+        Intent intent = new Intent(this, SignIn.class);
+        startActivity(intent);
     }
 
 
@@ -102,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             if (position == 0) return NewsGridFragment.newInstance();
-            if (position == 1) return FooFragment.newInstance();
-            if (position == 2) return SignIn.newInstance();
+            if (position == 1) return MishapCreator.newInstance();
+
 
 
             //getItem is called to instantiate the fragment for the given page.

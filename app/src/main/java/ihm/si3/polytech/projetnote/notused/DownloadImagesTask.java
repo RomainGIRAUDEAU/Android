@@ -1,4 +1,4 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.notused;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

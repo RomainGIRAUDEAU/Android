@@ -1,4 +1,4 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +14,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ihm.si3.polytech.projetnote.R;
+import ihm.si3.polytech.projetnote.utility.Mishap;
 
 /**
  * Created by user on 26/03/2018.

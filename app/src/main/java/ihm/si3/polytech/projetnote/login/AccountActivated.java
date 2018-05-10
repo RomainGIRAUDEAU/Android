@@ -1,10 +1,12 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.login;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import ihm.si3.polytech.projetnote.R;
 
 public class AccountActivated extends Activity {
     @Override

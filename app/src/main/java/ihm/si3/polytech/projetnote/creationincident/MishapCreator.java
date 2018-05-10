@@ -1,4 +1,4 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.creationincident;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +12,10 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class FooFragment extends Fragment {
+import ihm.si3.polytech.projetnote.R;
+import ihm.si3.polytech.projetnote.utility.Mishap;
+
+public class MishapCreator extends Fragment {
 
 
     private static final String ARG_SECTION_NUMBER = "1";
@@ -20,9 +23,7 @@ public class FooFragment extends Fragment {
     private DatabaseReference databaseReference;
 
 
-
-
-    public FooFragment() {
+    public MishapCreator() {
 
 
     }
@@ -31,8 +32,8 @@ public class FooFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static FooFragment newInstance() {
-        FooFragment fragment = new FooFragment();
+    public static MishapCreator newInstance() {
+        MishapCreator fragment = new MishapCreator();
         Bundle args = new Bundle();
         fragment.setArguments(args);
 

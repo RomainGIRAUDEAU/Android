@@ -1,4 +1,4 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.notused;
 
 import android.os.AsyncTask;
 import android.provider.MediaStore;

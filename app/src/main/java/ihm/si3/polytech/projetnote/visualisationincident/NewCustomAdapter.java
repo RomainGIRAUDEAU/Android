@@ -1,4 +1,4 @@
-package ihm.si3.polytech.projetnote;
+package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +14,9 @@ import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import ihm.si3.polytech.projetnote.R;
+import ihm.si3.polytech.projetnote.utility.Mishap;
 
 
 /**
