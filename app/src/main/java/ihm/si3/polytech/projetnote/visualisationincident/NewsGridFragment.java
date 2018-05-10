@@ -29,6 +29,21 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
     public NewsGridFragment() {
         articleList = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Mishap climate = postSnapshot.getValue(Mishap.class);
+                    articleList.add(climate);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("firebase error :" + firebaseError.getDetails());
+            }
+        });
 
     }
 
@@ -47,6 +62,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_news_grid, container, false);
     }
 
@@ -54,23 +70,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Mishap climate = postSnapshot.getValue(Mishap.class);
-                    articleList.add(climate);
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-                /*
-                 * You may print the error message.
-                 **/
-            }
-        });
 
 
         GridView gridView = getView().findViewById(R.id.listArticle);

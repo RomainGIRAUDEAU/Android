@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.utility.Mishap;
+import ihm.si3.polytech.projetnote.utility.Priority;
 
 public class MishapCreator extends Fragment {
 
@@ -53,6 +55,7 @@ public class MishapCreator extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Button button = getActivity().findViewById(R.id.valider);
+        final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
 
         button.setOnClickListener(new View.OnClickListener() // do something on click
         {
@@ -62,16 +65,20 @@ public class MishapCreator extends Fragment {
                 TextView description = getActivity().findViewById(R.id.descriptionArticle);
                 Mishap mishap = new Mishap();
                 mishap.setTitle(title.getText().toString().trim());
-                mishap.setTitle(description.getText().toString().trim());
+                mishap.setDescription(description.getText().toString().trim());
+                mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
 
-                databaseReference = FirebaseDatabase.getInstance().getReference();
-                databaseReference.child("mishap").setValue(mishap);
+                databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
+
+
+                databaseReference.child(mishap.getTitle()).setValue(mishap);
                 Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
 
 
             }
         });
     }
+
 
     private void saveMishap() {
 

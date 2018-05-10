@@ -90,11 +90,12 @@ public class NewCustomAdapter extends ArrayAdapter<Mishap> {
 
 
         }
-        TextView descr = (TextView) convertView.findViewById(R.id.descriptionArticle);
-        descr.setText(getItem(position).getText());
+        */
+        TextView descr = convertView.findViewById(R.id.descriptionArticle);
+        descr.setText(getItem(position).getDescription());
 
 
-    */
+
 
         return convertView;
     }
