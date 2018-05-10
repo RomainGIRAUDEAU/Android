@@ -7,7 +7,7 @@ package ihm.si3.polytech.projetnote.utility;
 public class Mishap {
 
     private String title;
-    private String description;
+    private String text;
     private String author;
     private String date;
     private State state;
@@ -25,6 +25,13 @@ public class Mishap {
         this.title = title;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public String getAuthor() {
         return author;
@@ -84,13 +91,5 @@ public class Mishap {
 
     public void setPlace(String place) {
         this.place = place;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }
