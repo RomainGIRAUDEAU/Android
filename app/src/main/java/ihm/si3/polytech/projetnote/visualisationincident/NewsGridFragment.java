@@ -1,10 +1,11 @@
 package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,16 +50,16 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         return inflater.inflate(R.layout.fragment_news_grid, container, false);
     }
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         super.onActivityCreated(savedInstanceState);
 
-
-        final GridView gridView = getView().findViewById(R.id.listArticle);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -69,8 +70,16 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                     Mishap climate = postSnapshot.getValue(Mishap.class);
                     articleList.add(climate);
                 }
-                gridView.setAdapter(new NewCustomAdapter(getContext(), articleList));
+                MyRecyclerAdapter recyclerView = new MyRecyclerAdapter(articleList);
+                RecyclerView gridView = getView().findViewById(R.id.listArticle);
+                gridView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+                gridView.setAdapter(recyclerView);
+
+
+
+
             }
+
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
