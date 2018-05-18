@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             if (position == 0) return NewsGridFragment.newInstance();
             if (position == 1) return MishapCreator.newInstance();
+            if (position == 2) return MapMishap.newInstance();
 
 
 

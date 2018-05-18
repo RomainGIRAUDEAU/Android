@@ -1,11 +1,14 @@
 package ihm.si3.polytech.projetnote.visualisationincident;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,10 +29,17 @@ import ihm.si3.polytech.projetnote.utility.Mishap;
 public class NewsGridFragment extends android.support.v4.app.Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    /**
+     * mishap  selected to get an order
+     */
+    public List<Mishap> selectedMishap;
+
     private List<Mishap> articleList;
+    MyRecyclerAdapter mAdapter;
 
     public NewsGridFragment() {
         articleList = new ArrayList<>();
+        selectedMishap = new ArrayList<>();
 
 
     }
@@ -70,13 +80,9 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                     Mishap climate = postSnapshot.getValue(Mishap.class);
                     articleList.add(climate);
                 }
-                MyRecyclerAdapter recyclerView = new MyRecyclerAdapter(articleList);
-                RecyclerView gridView = getView().findViewById(R.id.listArticle);
-                gridView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-                gridView.setAdapter(recyclerView);
 
-
-
+                mAdapter = new MyRecyclerAdapter(articleList);
+                setupRecyclerView();
 
             }
 
@@ -90,5 +96,37 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
     }
 
+    private void setupRecyclerView() {
+        RecyclerView recyclerView = getActivity().findViewById(R.id.listArticle);
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(mAdapter);
+        final SwipeController swipeController = new SwipeController(new SwipeControllerAction() {
+            @Override
+            public void onLeftClicked(int position) {
+                Toast.makeText(getContext(), "your select mishap " + articleList.get(position), Toast.LENGTH_LONG).show();
+                selectedMishap.add(articleList.get(position));
+
+
+            }
+
+            @Override
+            public void onRightClicked(int position) {
+                selectedMishap.remove(position);
+            }
+        });
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
+            }
+        });
+    }
+
+    public List<Mishap> getSelectedMishap() {
+        return selectedMishap;
+    }
 }
