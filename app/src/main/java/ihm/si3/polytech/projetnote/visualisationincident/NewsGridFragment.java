@@ -28,6 +28,7 @@ import ihm.si3.polytech.projetnote.utility.Mishap;
 
 public class NewsGridFragment extends android.support.v4.app.Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static NewsGridFragment fragment;
 
     /**
      * mishap  selected to get an order
@@ -44,17 +45,22 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
     }
 
+    public static NewsGridFragment getInstance() {
+        return fragment;
+    }
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
     public static NewsGridFragment newInstance() {
-        NewsGridFragment fragment = new NewsGridFragment();
+        fragment = new NewsGridFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
 
         return fragment;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

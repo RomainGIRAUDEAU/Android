@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,10 @@ import com.google.android.gms.maps.model.RoundCap;
 import java.util.Arrays;
 import java.util.List;
 
+import ihm.si3.polytech.projetnote.utility.Mishap;
+import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
+import ihm.si3.polytech.projetnote.visualisationincident.NewsGridFragment;
+
 public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap.OnPolylineClickListener,
         GoogleMap.OnPolygonClickListener {
 
@@ -44,9 +51,10 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 // Create a stroke pattern of a gap followed by a dot.
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
 
-
+    private List<Mishap> mishapList;
     private MapView mapView;
     private GoogleMap googleMap;
+    private MyRecyclerAdapter mAdapter;
 
 
     public static Fragment newInstance() {
@@ -60,6 +68,8 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.activity_mapline, container, false);
     }
 
@@ -69,6 +79,23 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
+        mishapList = NewsGridFragment.getInstance().getSelectedMishap();
+        Toast.makeText(getContext(), "number of mishap " + mishapList.size(), Toast.LENGTH_LONG).show();
+        // 1. get a reference to recyclerView
+        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerMap);
+
+        // 2. set layoutManger
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        // 3. create an adapter
+        MyRecyclerAdapter mAdapter = new MyRecyclerAdapter(mishapList);
+        // 4. set adapter
+        recyclerView.setAdapter(mAdapter);
+        // 5. set item animator to DefaultAnimator
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
     }
 
     @Override
@@ -163,5 +190,12 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
         Toast.makeText(getActivity(), "Route type " + polyline.getTag().toString(),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private void setupRecyclerView() {
+        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerMap);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mAdapter);
     }
 }
