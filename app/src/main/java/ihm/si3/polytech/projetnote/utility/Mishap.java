@@ -1,10 +1,12 @@
 package ihm.si3.polytech.projetnote.utility;
 
+import java.io.Serializable;
+
 /**
  * Created by user on 08/04/2018.
  */
 
-public class Mishap {
+public class Mishap implements Serializable {
 
     private String title;
     private String description;
@@ -16,6 +18,8 @@ public class Mishap {
     private String dateEnd;
     private String place;
     private String urlPicture;
+    private Double xPos;
+    private Double yPos;
 
     public Mishap() {
 
@@ -101,5 +105,21 @@ public class Mishap {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Double getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(Double xPos) {
+        this.xPos = xPos;
+    }
+
+    public Double getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(Double yPos) {
+        this.yPos = yPos;
     }
 }

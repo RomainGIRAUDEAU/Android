@@ -42,7 +42,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                 //  intent.putExtra("mishap", mishapList.get(position));
                 System.out.println("inside mamene");
+                intent.putExtra("Mishap", mishapList.get(position));
                 v.getContext().startActivity(intent);
+
 
             }
         });
