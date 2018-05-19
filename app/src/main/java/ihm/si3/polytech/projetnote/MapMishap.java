@@ -27,7 +27,6 @@ import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
@@ -36,6 +35,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import ihm.si3.polytech.projetnote.utility.Mishap;
@@ -85,18 +85,10 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
         mishapList = NewsGridFragment.getInstance().getSelectedMishap();
         Toast.makeText(getContext(), "number of mishap " + mishapList.size(), Toast.LENGTH_LONG).show();
-        // 1. get a reference to recyclerView
         RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerMap);
-
-        // 2. set layoutManger
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-        // 3. create an adapter
         MyRecyclerAdapter mAdapter = new MyRecyclerAdapter(mishapList);
-        // 4. set adapter
         recyclerView.setAdapter(mAdapter);
-        // 5. set item animator to DefaultAnimator
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
@@ -104,23 +96,15 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
     @Override
     public void onMapReady(GoogleMap map) {
+
         googleMap = map;
-        Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(-35.016, 143.321))
-                .title("premier Mishap").snippet("jes suis mal"));
-        Marker marker1 = map.addMarker(new MarkerOptions().position(new LatLng(-34.747, 145.592))
-                .title("deuxieme mishap").snippet("je suis pas bien"));
+        createMarker();
+
         // Add polylines and polygons to the map. This section shows just
         // a single polyline. Read the rest of the tutorial to learn more.
         Polyline polyline1 = googleMap.addPolyline(new PolylineOptions().clickable(true)
 
-                .add(
-
-                        new LatLng(-35.016, 143.321),
-                        new LatLng(-34.747, 145.592),
-                        new LatLng(-34.364, 147.891),
-                        new LatLng(-33.501, 150.217),
-                        new LatLng(-32.306, 149.248),
-                        new LatLng(-32.491, 147.309))
+                .addAll(createLat())
                 .color(Color.RED)
                 .width(10));
 
@@ -147,6 +131,22 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
             return;
         }
         googleMap.setMyLocationEnabled(true);
+    }
+
+    private void createMarker() {
+        for (Mishap mishap : mishapList) {
+            googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
+                    .title(mishap.getTitle()).snippet(mishap.getDescription()));
+
+        }
+    }
+
+    private List<LatLng> createLat() {
+        List<LatLng> latLngs = new LinkedList<>();
+        for (Mishap mishap : mishapList) {
+            latLngs.add(new LatLng(mishap.getxPos(), mishap.getyPos()));
+        }
+        return latLngs;
     }
 
     private void stylePolyline(Polyline polyline) {
