@@ -1,31 +1,42 @@
 package ihm.si3.polytech.projetnote;
 
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
-import ihm.si3.polytech.projetnote.login.StoreUsers;
-import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 
-public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyViewHolder2> {
+public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyViewHolder2> implements GoogleMap.OnMarkerClickListener {
+
+    private Handler mHandler;
+    private Runnable mAnimation;
 
     private List<Mishap> mishapList;
+
 
     public MapCardRecycler(List<Mishap> mishapList) {
         this.mishapList = mishapList;
 
+        mHandler = new Handler();
+
     }
+
 
     @Override
     public MapCardRecycler.MyViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customlayout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mapmishap_adaptateur, parent, false);
         return new MapCardRecycler.MyViewHolder2(view);
     }
 
@@ -37,8 +48,18 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
         {
 
             public void onClick(View v) {
-                // holder.cardView.setBackgroundColor(Color.RED);
+                //
+                Marker marker = mishapList.get(position).getMarker();
 
+                final long start = SystemClock.uptimeMillis();
+                final long duration = 1500L;
+
+                // Cancels the previous animation
+                mHandler.removeCallbacks(mAnimation);
+
+                // Starts the bounce animation
+                mAnimation = new BounceAnimation(start, duration, marker, mHandler);
+                mHandler.post(mAnimation);
 
             }
         });
@@ -46,13 +67,30 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
 
         Mishap currentMishap = mishapList.get(position);
         holder.titleMishap.setText(currentMishap.getTitle());
-        holder.description.setText(currentMishap.getDescription());
-        holder.username.setText(currentMishap.getAuthor());
+        //    holder.description.setText(currentMishap.getDescription());
+        holder.mainLetter.setText(String.valueOf(currentMishap.getNumber()));
 
 
-        DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);
-        downloadImagesTask.execute(StoreUsers.getUrlPicture());
+        //  DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);
+        //downloadImagesTask.execute(StoreUsers.getUrlPicture());
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // This causes the marker at Perth to bounce into position when it is clicked.
+        final long start = SystemClock.uptimeMillis();
+        final long duration = 1500L;
+
+        // Cancels the previous animation
+        mHandler.removeCallbacks(mAnimation);
+
+        // Starts the bounce animation
+        mAnimation = new BounceAnimation(start, duration, marker, mHandler);
+        mHandler.post(mAnimation);
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 
 
@@ -61,21 +99,50 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
         return mishapList.size();
     }
 
+    /**
+     * Performs a bounce animation on a {@link Marker}.
+     */
+    private static class BounceAnimation implements Runnable {
+
+        private final long mStart, mDuration;
+        private final Interpolator mInterpolator;
+        private final Marker mMarker;
+        private final Handler mHandler;
+
+        private BounceAnimation(long start, long duration, Marker marker, Handler handler) {
+            mStart = start;
+            mDuration = duration;
+            mMarker = marker;
+            mHandler = handler;
+            mInterpolator = new BounceInterpolator();
+        }
+
+        @Override
+        public void run() {
+            long elapsed = SystemClock.uptimeMillis() - mStart;
+            float t = Math.max(1 - mInterpolator.getInterpolation((float) elapsed / mDuration), 0f);
+            mMarker.setAnchor(0.5f, 1.0f + 1.2f * t);
+
+            if (t > 0.0) {
+                // Post again 16ms later.
+                mHandler.postDelayed(this, 16L);
+            }
+        }
+    }
 
     public class MyViewHolder2 extends RecyclerView.ViewHolder {
         public TextView titleMishap;
         public TextView description;
-        public TextView username;
-        public ImageView imagePerson;
         public CardView cardView;
+        public TextView mainLetter;
 
         public MyViewHolder2(final View view) {
             super(view);
             titleMishap = view.findViewById(R.id.card_title);
-            description = view.findViewById(R.id.card_description);
-            username = view.findViewById(R.id.person_username);
-            imagePerson = view.findViewById(R.id.person_picture);
+            //description = view.findViewById(R.id.card_description);
+            mainLetter = view.findViewById(R.id.main_letter);
             cardView = view.findViewById(R.id.cv);
+
 
         }
     }

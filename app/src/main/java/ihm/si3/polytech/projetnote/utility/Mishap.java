@@ -1,5 +1,7 @@
 package ihm.si3.polytech.projetnote.utility;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,7 @@ import java.io.Serializable;
 public class Mishap implements Serializable {
 
     private String title;
+    private int number;
     private String description;
     private String author;
     private String date;
@@ -21,10 +24,20 @@ public class Mishap implements Serializable {
     private Double xPos;
     private Double yPos;
     private boolean selectedItem;
+    private Marker marker;
+
 
     public Mishap() {
 
 
+    }
+
+    public Marker getMarker() {
+        return marker;
+    }
+
+    public void setMarker(Marker marker) {
+        this.marker = marker;
     }
 
     public String getUrlPicture() {
@@ -126,6 +139,14 @@ public class Mishap implements Serializable {
 
     public boolean isSelectedItem() {
         return selectedItem;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public void setSelectedItem(boolean selectedItem) {

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -21,16 +20,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CustomCap;
 import com.google.android.gms.maps.model.Dot;
@@ -61,6 +58,8 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private static final int POLYLINE_STROKE_WIDTH_PX = 12;
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(4);
+
+
     //
 // Create a stroke pattern of a gap followed by a dot.
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
@@ -70,7 +69,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private GoogleMap googleMap;
 
     MapCardRecycler mAdaptater;
-    private AdView mAdView;
+
 
 
     public static Fragment newInstance() {
@@ -97,11 +96,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
         mishapList = NewsGridFragment.getInstance().getSelectedMishap();
         Toast.makeText(getContext(), "number of mishap " + mishapList.size(), Toast.LENGTH_LONG).show();
-        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdaptater = new MapCardRecycler(mishapList);
-        recyclerView.setAdapter(mAdaptater);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
 
         // ViewCompat.setTransitionName(getActivity().findViewById(R.id.app_bar_layout));
@@ -151,6 +146,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
     private void createMarker() {
+
         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
         Bitmap bmp = Bitmap.createBitmap(200, 50, conf);
         Canvas canvas = new Canvas(bmp);
@@ -165,8 +161,15 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                     .title(mishap.getTitle()).snippet(mishap.getDescription()));
             p1.setTag(i);
             i++;
+            mishap.setNumber(i);
+            mishap.setMarker(p1);
 
         }
+        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdaptater = new MapCardRecycler(mishapList);
+        recyclerView.setAdapter(mAdaptater);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
     }
@@ -255,38 +258,36 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
     }
 
-    public void animateMarker(final Marker marker, final LatLng toPosition,
-                              final boolean hideMarker) {
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = googleMap.getProjection();
-        Point startPoint = proj.toScreenLocation(marker.getPosition());
-        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-        final long duration = 500;
-        final Interpolator interpolator = new LinearInterpolator();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed
-                        / duration);
-                double lng = t * toPosition.longitude + (1 - t)
-                        * startLatLng.longitude;
-                double lat = t * toPosition.latitude + (1 - t)
-                        * startLatLng.latitude;
-                marker.setPosition(new LatLng(lat, lng));
-                if (t < 1.0) {
-                    // Post again 16ms later.
-                    handler.postDelayed(this, 16);
-                } else {
-                    if (hideMarker) {
-                        marker.setVisible(false);
-                    } else {
-                        marker.setVisible(true);
-                    }
-                }
+
+    /**
+     * Performs a bounce animation on a {@link Marker}.
+     */
+    private static class BounceAnimation implements Runnable {
+
+        private final long mStart, mDuration;
+        private final Interpolator mInterpolator;
+        private final Marker mMarker;
+        private final Handler mHandler;
+
+        private BounceAnimation(long start, long duration, Marker marker, Handler handler) {
+            mStart = start;
+            mDuration = duration;
+            mMarker = marker;
+            mHandler = handler;
+            mInterpolator = new BounceInterpolator();
+        }
+
+        @Override
+        public void run() {
+            long elapsed = SystemClock.uptimeMillis() - mStart;
+            float t = Math.max(1 - mInterpolator.getInterpolation((float) elapsed / mDuration), 0f);
+            mMarker.setAnchor(0.5f, 1.0f + 1.2f * t);
+
+            if (t > 0.0) {
+                // Post again 16ms later.
+                mHandler.postDelayed(this, 16L);
             }
-        });
+        }
     }
 
 
