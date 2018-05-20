@@ -20,6 +20,7 @@ public class Mishap implements Serializable {
     private String urlPicture;
     private Double xPos;
     private Double yPos;
+    private boolean selectedItem;
 
     public Mishap() {
 
@@ -121,5 +122,13 @@ public class Mishap implements Serializable {
 
     public void setyPos(Double yPos) {
         this.yPos = yPos;
+    }
+
+    public boolean isSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(boolean selectedItem) {
+        this.selectedItem = selectedItem;
     }
 }

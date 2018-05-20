@@ -119,14 +119,14 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
             @Override
             public void onLeftClicked(int position) {
                 Toast.makeText(getContext(), "your select mishap " + articleList.get(position), Toast.LENGTH_LONG).show();
-                selectedMishap.add(articleList.get(position));
+                //  selectedMishap.add(articleList.get(position));
 
 
             }
 
             @Override
             public void onRightClicked(int position) {
-                selectedMishap.remove(position);
+                //selectedMishap.remove(position);
             }
         });
 
@@ -141,6 +141,6 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     }
 
     public List<Mishap> getSelectedMishap() {
-        return selectedMishap;
+        return mAdapter.getSelectedMishap();
     }
 }
