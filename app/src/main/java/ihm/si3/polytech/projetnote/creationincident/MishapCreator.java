@@ -103,8 +103,8 @@ public class MishapCreator extends Fragment {
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
-
-                databaseReference.child(mishap.getTitle()).setValue(mishap);
+                String id = databaseReference.push().getKey();
+                databaseReference.child(id).setValue(mishap);
                 Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
 
             }

@@ -102,7 +102,15 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
     }
 
+    /**
+     * See the adapter in the sample project for a click listener implementation. Click listeners
+     * aren't provided by this library.
+     */
+
+
     private void setupRecyclerView() {
+
+
         RecyclerView recyclerView = getActivity().findViewById(R.id.listArticle);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

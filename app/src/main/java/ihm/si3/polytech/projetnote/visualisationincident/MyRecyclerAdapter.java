@@ -59,10 +59,12 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
     }
 
+
     @Override
     public int getItemCount() {
         return mishapList.size();
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView titleMishap;

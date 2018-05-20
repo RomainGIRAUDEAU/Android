@@ -41,7 +41,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.8.0'
     // Required only if Facebook login support is required
     compile('com.facebook.android:facebook-android-sdk:4.27.0')
+    implementation 'com.afollestad:drag-select-recyclerview:1.0.0'
 
+
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'

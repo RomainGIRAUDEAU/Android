@@ -2,8 +2,14 @@ package ihm.si3.polytech.projetnote;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -15,18 +21,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CustomCap;
 import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polygon;
@@ -39,7 +50,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import ihm.si3.polytech.projetnote.utility.Mishap;
-import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
 import ihm.si3.polytech.projetnote.visualisationincident.NewsGridFragment;
 
 import static ihm.si3.polytech.projetnote.visualisationincident.DetailsActivity.REQUEST_LOCATION;
@@ -58,7 +68,9 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private List<Mishap> mishapList;
     private MapView mapView;
     private GoogleMap googleMap;
-    private MyRecyclerAdapter mAdapter;
+
+    MapCardRecycler mAdaptater;
+    private AdView mAdView;
 
 
     public static Fragment newInstance() {
@@ -79,17 +91,22 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mapView = view.findViewById(R.id.map);
+        mapView = view.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
         mishapList = NewsGridFragment.getInstance().getSelectedMishap();
         Toast.makeText(getContext(), "number of mishap " + mishapList.size(), Toast.LENGTH_LONG).show();
-        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerMap);
+        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        MyRecyclerAdapter mAdapter = new MyRecyclerAdapter(mishapList);
-        recyclerView.setAdapter(mAdapter);
+        mAdaptater = new MapCardRecycler(mishapList);
+        recyclerView.setAdapter(mAdaptater);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        // ViewCompat.setTransitionName(getActivity().findViewById(R.id.app_bar_layout));
+
+
 
 
     }
@@ -112,7 +129,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         stylePolyline(polyline1);
         // Position the map's camera near Alice Springs in the center of Australia,
         // and set the zoom factor so most of Australia shows on the screen.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4)); // TODO: 19/05/2018  je ne sais pas quelles cordonnées je dois prendre
 
         // Set listeners for click events.
         googleMap.setOnPolylineClickListener(this);
@@ -134,11 +151,24 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
     private void createMarker() {
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+        Bitmap bmp = Bitmap.createBitmap(200, 50, conf);
+        Canvas canvas = new Canvas(bmp);
+        Paint paint = new Paint();
+        paint.setStrokeWidth(100);
+        paint.setColor(Color.BLUE);
+        canvas.drawText("TEXT", 0, 50, paint); // paint defines the text color, stroke width, size
+        int i = 0;
         for (Mishap mishap : mishapList) {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
+
+            Marker p1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
                     .title(mishap.getTitle()).snippet(mishap.getDescription()));
+            p1.setTag(i);
+            i++;
 
         }
+
+
     }
 
     private List<LatLng> createLat() {
@@ -197,10 +227,10 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
     private void setupRecyclerView() {
-        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerMap);
+        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdaptater);
     }
 
     @Override
@@ -224,4 +254,40 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         }
 
     }
+
+    public void animateMarker(final Marker marker, final LatLng toPosition,
+                              final boolean hideMarker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = googleMap.getProjection();
+        Point startPoint = proj.toScreenLocation(marker.getPosition());
+        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+        final long duration = 500;
+        final Interpolator interpolator = new LinearInterpolator();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                double lng = t * toPosition.longitude + (1 - t)
+                        * startLatLng.longitude;
+                double lat = t * toPosition.latitude + (1 - t)
+                        * startLatLng.latitude;
+                marker.setPosition(new LatLng(lat, lng));
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
+    }
+
+
 }
