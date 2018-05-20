@@ -14,7 +14,7 @@ import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 
-public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyViewHolder> {
+public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyViewHolder2> {
 
     private List<Mishap> mishapList;
 
@@ -24,14 +24,14 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
     }
 
     @Override
-    public MapCardRecycler.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MapCardRecycler.MyViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customlayout, parent, false);
-        return new MapCardRecycler.MyViewHolder(view);
+        return new MapCardRecycler.MyViewHolder2(view);
     }
 
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder2 holder, final int position) {
 
         holder.cardView.setOnClickListener(new View.OnClickListener() // do something on click
         {
@@ -62,14 +62,14 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder2 extends RecyclerView.ViewHolder {
         public TextView titleMishap;
         public TextView description;
         public TextView username;
         public ImageView imagePerson;
         public CardView cardView;
 
-        public MyViewHolder(final View view) {
+        public MyViewHolder2(final View view) {
             super(view);
             titleMishap = view.findViewById(R.id.card_title);
             description = view.findViewById(R.id.card_description);
