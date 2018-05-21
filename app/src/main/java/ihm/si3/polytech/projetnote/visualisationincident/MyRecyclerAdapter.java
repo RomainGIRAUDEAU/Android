@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.battleent.ribbonviews.RibbonLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Mishap;
+import ihm.si3.polytech.projetnote.utility.Priority;
 
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.MyViewHolder> {
 
@@ -75,6 +78,21 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         holder.titleMishap.setText(currentMishap.getTitle());
         holder.description.setText(currentMishap.getDescription());
         holder.username.setText(currentMishap.getAuthor());
+        String priority = currentMishap.getPriority().name();
+        if (currentMishap.getDate() != null) {
+            holder.ribbonLayout.setBottomText(currentMishap.getDate());
+        }
+
+        if (currentMishap.getPriority() == Priority.CRITICAL) {
+            holder.ribbonLayout.setHeaderRibbonColor(Color.RED);
+        } else if (currentMishap.getPriority() == Priority.HIGH) {
+            holder.ribbonLayout.setHeaderRibbonColor(Color.YELLOW);
+        } else if (currentMishap.getPriority() == Priority.MEDIUM) {
+            holder.ribbonLayout.setHeaderRibbonColor(Color.CYAN);
+        } else if (currentMishap.getPriority() == Priority.LOW) {
+            holder.ribbonLayout.setHeaderRibbonColor(Color.GREEN);
+        }
+        holder.ribbonLayout.setHeaderText(priority);
 
 
         DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);
@@ -95,6 +113,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         public TextView username;
         public ImageView imagePerson;
         public CardView cardView;
+        public RibbonLayout ribbonLayout;
 
         public MyViewHolder(final View view) {
             super(view);
@@ -103,6 +122,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             username = view.findViewById(R.id.person_username);
             imagePerson = view.findViewById(R.id.person_picture);
             cardView = view.findViewById(R.id.cv);
+            ribbonLayout = view.findViewById(R.id.ribbonTag);
 
         }
     }

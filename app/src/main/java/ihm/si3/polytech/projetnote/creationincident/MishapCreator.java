@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
+
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Mishap;
@@ -101,6 +103,7 @@ public class MishapCreator extends Fragment {
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
+                mishap.setDate(Calendar.getInstance().getTime().toString());
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
                 String id = databaseReference.push().getKey();
