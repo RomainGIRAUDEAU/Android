@@ -1,7 +1,6 @@
 package ihm.si3.polytech.projetnote.creationincident;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import ihm.si3.polytech.projetnote.MainActivity;
 import ihm.si3.polytech.projetnote.Manifest;
+import java.util.Calendar;
+
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Mishap;
