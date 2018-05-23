@@ -2,10 +2,7 @@ package ihm.si3.polytech.projetnote;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -109,7 +106,9 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     @Override
     public void onMapReady(GoogleMap map) {
 
+
         googleMap = map;
+        createSchool();
         createMarker();
 
         // Add polylines and polygons to the map. This section shows just
@@ -122,9 +121,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
         polyline1.setTag("B");
         stylePolyline(polyline1);
-        // Position the map's camera near Alice Springs in the center of Australia,
-        // and set the zoom factor so most of Australia shows on the screen.
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4)); // TODO: 19/05/2018  je ne sais pas quelles cordonnées je dois prendre
+
 
         // Set listeners for click events.
         googleMap.setOnPolylineClickListener(this);
@@ -146,14 +143,6 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
     private void createMarker() {
-
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-        Bitmap bmp = Bitmap.createBitmap(200, 50, conf);
-        Canvas canvas = new Canvas(bmp);
-        Paint paint = new Paint();
-        paint.setStrokeWidth(100);
-        paint.setColor(Color.BLUE);
-        canvas.drawText("TEXT", 0, 50, paint); // paint defines the text color, stroke width, size
         int i = 0;
         for (Mishap mishap : mishapList) {
 
@@ -288,6 +277,36 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                 mHandler.postDelayed(this, 16L);
             }
         }
+    }
+
+    private void createSchool() {
+
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.615436, 7.071840), 17)); // TODO: 19/05/2018  je ne sais pas quelles cordonnées je dois prendre
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615811, 7.072427))
+                .title("Batiment E")
+                .snippet("4 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615436, 7.071840))
+                .title("Batiment O")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615059, 7.071306))
+                .title("Batiment Forum")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.614827, 7.071574))
+                .title("Learning Center")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_book_black_18dp)));
+
     }
 
 

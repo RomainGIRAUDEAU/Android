@@ -2,25 +2,39 @@ package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.utility.Mishap;
+
+import static com.firebase.ui.auth.ui.email.RegisterEmailFragment.TAG;
 
 /**
  * Created by user on 26/03/2018.
@@ -29,6 +43,7 @@ import ihm.si3.polytech.projetnote.utility.Mishap;
 public class NewsGridFragment extends android.support.v4.app.Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static NewsGridFragment fragment;
+    private FirebaseFunctions mFunctions;
 
     /**
      * mishap  selected to get an order
@@ -72,7 +87,11 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {        // [START initialize_functions_instance]
+        mFunctions = FirebaseFunctions.getInstance();
+
+
+
 
         super.onActivityCreated(savedInstanceState);
 
@@ -98,6 +117,36 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                 System.out.println("firebase error :" + firebaseError.getDetails());
             }
         });
+
+        // [START call_add_message]
+        addMessage("test")
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            if (e instanceof FirebaseFunctionsException) {
+                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                FirebaseFunctionsException.Code code = ffe.getCode();
+                                Object details = ffe.getDetails();
+                            }
+
+                            // [START_EXCLUDE]
+                            Log.w(TAG, "addMessage:onFailure", e);
+                            //showSnackbar("An error occurred.");
+                            return;
+                            // [END_EXCLUDE]
+                        }
+
+                        // [START_EXCLUDE]
+                        String result = task.getResult();
+                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                        // mMessageOutputField.setText(result);
+                        // [END_EXCLUDE]
+                    }
+                });
+
+
 
 
     }
@@ -138,9 +187,90 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                 swipeController.onDraw(c);
             }
         });
+
+        test()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            if (e instanceof FirebaseFunctionsException) {
+                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                FirebaseFunctionsException.Code code = ffe.getCode();
+                                Object details = ffe.getDetails();
+                            }
+
+                            // [START_EXCLUDE]
+                            Log.w(TAG, "addMessage:onFailure", e);
+                            //showSnackbar("An error occurred.");
+                            return;
+                            // [END_EXCLUDE]
+                        }
+
+                        // [START_EXCLUDE]
+                        String result = task.getResult();
+                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                        // mMessageOutputField.setText(result);
+                        // [END_EXCLUDE]
+                    }
+                });
     }
 
     public List<Mishap> getSelectedMishap() {
         return mAdapter.getSelectedMishap();
+    }
+
+
+    // [START function_add_message]
+    private Task<String> addMessage(String text) {
+        // Create the arguments to the callable function, which is just one string
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", text);
+
+        return mFunctions
+                .getHttpsCallable("addMessage")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        String result = (String) task.getResult().getData();
+                        return result;
+                    }
+                });
+    }
+
+    private Task<String> test() {
+
+        Map<String, Object> data = new HashMap<>();
+        double x = new LatLng(33, 33).latitude;
+        double y = new LatLng(33, 33).longitude;
+        Map<String, Object> localisation = new HashMap<>();
+        localisation.put("xPos", x);
+        localisation.put("yPos", y);
+        data.put("myLocalisation", localisation);
+        Gson gson = new Gson();
+        Object json = gson.toJson(articleList);
+
+        data.put("mishap", json);
+
+        return mFunctions
+                .getHttpsCallable("findNearestPath")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        selectedMishap = (List<Mishap>) task.getResult().getData();
+
+                        return String.valueOf(selectedMishap.size());
+
+                    }
+                });
+
     }
 }

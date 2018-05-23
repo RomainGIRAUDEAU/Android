@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ihm.si3.polytech.projetnote.R;
-import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
@@ -96,7 +95,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
 
 
         DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);
-        downloadImagesTask.execute(StoreUsers.getUrlPicture());
+        downloadImagesTask.execute(currentMishap.getUrlPicture());
 
     }
 
