@@ -102,6 +102,7 @@ public class MishapCreator extends Fragment  {
                         @Override
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
+
                             setLocationText(location);
                         }
                     });
@@ -154,6 +155,13 @@ public class MishapCreator extends Fragment  {
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
+                if(mLocation!=null) {
+                    mishap.setxPos(mLocation.getLongitude());
+                    mishap.setyPos(mLocation.getLatitude());
+                }else{
+                    mishap.setxPos((double) 0);
+                    mishap.setyPos((double) 0);
+                }
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
@@ -173,6 +181,7 @@ public class MishapCreator extends Fragment  {
     private void setLocationText(Location l){
         TextView textGPS= getActivity().findViewById(R.id.textGPS);
         if (l!=null){
+            this.mLocation=l;
             textGPS.setText("Longitude : "+l.getLongitude()+"/Latitude : "+l.getLatitude());
         }else{
             textGPS.setText("Longitude : N /Latitude : N");
