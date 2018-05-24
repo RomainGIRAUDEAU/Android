@@ -2,8 +2,10 @@ package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.graphics.Canvas;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -32,6 +34,7 @@ import java.util.Map;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.utility.Mishap;
+import ihm.si3.polytech.projetnote.utility.MishapComparator;
 
 import static com.firebase.ui.auth.ui.email.RegisterEmailFragment.TAG;
 
@@ -96,6 +99,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
         databaseReference.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 articleList = new ArrayList<>();
@@ -103,6 +107,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                     Mishap climate = postSnapshot.getValue(Mishap.class);
                     articleList.add(climate);
                 }
+                articleList.sort(new MishapComparator());
 
                 mAdapter = new MyRecyclerAdapter(articleList);
                 setupRecyclerView();

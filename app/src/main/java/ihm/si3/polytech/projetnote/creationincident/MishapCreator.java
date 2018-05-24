@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -22,27 +20,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
-
-import ihm.si3.polytech.projetnote.MainActivity;
-import ihm.si3.polytech.projetnote.Manifest;
-import java.util.Calendar;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
+
 import static android.app.Activity.RESULT_OK;
 
 public class MishapCreator extends Fragment  {
@@ -51,7 +40,6 @@ public class MishapCreator extends Fragment  {
     private static final String ARG_SECTION_NUMBER = "1";
     static final int REQUEST_IMAGE_CAPTURE = 111;
     private DatabaseReference databaseReference;
-    private StorageReference mStorage;
     private ImageView imageView;
     private Bitmap imageBitmap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -117,7 +105,6 @@ public class MishapCreator extends Fragment  {
         Button button = getActivity().findViewById(R.id.valider);
         Button buttonPicture = getActivity().findViewById(R.id.takePicture);
         imageView = getActivity().findViewById(R.id.imageView);
-        mStorage = FirebaseStorage.getInstance().getReference();
         Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
 
