@@ -6,10 +6,9 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import ihm.si3.polytech.projetnote.MainActivity;
-import ihm.si3.polytech.projetnote.Manifest;
-import java.util.Calendar;
+import java.io.ByteArrayOutputStream;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
@@ -43,7 +36,7 @@ import static android.app.Activity.RESULT_OK;
 public class MishapCreator extends Fragment  {
 
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final String ARG_SECTION_NUMBER = "1";
     private DatabaseReference databaseReference;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -82,6 +75,25 @@ public class MishapCreator extends Fragment  {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ImageView imageView = getActivity().findViewById(R.id.imageView);
             imageView.setImageBitmap(imageBitmap);
+            encodeBitmapAndSaveToFirebase(imageBitmap);
+        }
+    }
+
+    private void encodeBitmapAndSaveToFirebase(Bitmap imageBitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        DatabaseReference ref = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("imageUrl");
+        ref.setValue(imageEncoded);
+    }
+
+
+    public void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -115,15 +127,10 @@ public class MishapCreator extends Fragment  {
 
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+                onLaunchCamera();
             }
 
-            private void dispatchTakePictureIntent() {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
-            }
+
         });
 
         buttonGPS.setOnClickListener(new View.OnClickListener() {
@@ -148,13 +155,16 @@ public class MishapCreator extends Fragment  {
         {
             public void onClick(View v) {
 
-                TextView title = getActivity().findViewById(R.id.title);
+                TextView title = getActivity().findViewById(R.id.title1);
                 TextView description = getActivity().findViewById(R.id.descriptionArticle);
                 Mishap mishap = new Mishap();
                 mishap.setTitle(title.getText().toString().trim());
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
+                String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
+                mishap.setDate(date);
+
                 if(mLocation!=null) {
                     mishap.setxPos(mLocation.getLatitude());
                     mishap.setyPos(mLocation.getLongitude());

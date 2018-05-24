@@ -47,6 +47,10 @@ dependencies {
     implementation 'com.afollestad:drag-select-recyclerview:1.0.0'
     implementation 'com.google.firebase:firebase-functions:15.0.0'
     compile 'com.google.code.gson:gson:2.7'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+
 
 
     implementation 'com.google.android.gms:play-services-ads:15.0.1'

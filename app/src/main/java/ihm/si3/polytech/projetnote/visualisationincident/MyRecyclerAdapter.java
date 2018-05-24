@@ -86,13 +86,18 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         if (currentMishap.getPriority() == Priority.CRITICAL) {
             holder.ribbonLayout.setHeaderRibbonColor(Color.RED);
         } else if (currentMishap.getPriority() == Priority.HIGH) {
-            holder.ribbonLayout.setHeaderRibbonColor(Color.YELLOW);
+            holder.ribbonLayout.setHeaderRibbonColor(Color.rgb(255, 153, 0));
         } else if (currentMishap.getPriority() == Priority.MEDIUM) {
-            holder.ribbonLayout.setHeaderRibbonColor(Color.CYAN);
+            holder.ribbonLayout.setHeaderRibbonColor(Color.rgb(255, 204, 0));
         } else if (currentMishap.getPriority() == Priority.LOW) {
             holder.ribbonLayout.setHeaderRibbonColor(Color.GREEN);
         }
         holder.ribbonLayout.setHeaderText(priority);
+        String datestr = currentMishap.getDate();
+
+
+        if (datestr != null)
+            holder.ribbonLayout.setBottomText(datestr);
 
 
         DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);

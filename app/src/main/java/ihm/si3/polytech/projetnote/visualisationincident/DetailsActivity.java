@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -42,6 +43,7 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mishap = (Mishap) getIntent().getSerializableExtra("Mishap");
+        createSchool();
 
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng localisation = new LatLng(mishap.getxPos(), mishap.getyPos());
@@ -79,6 +81,34 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
         } else {
             // Show rationale and request permission.
         }
+
+    }
+
+    private void createSchool() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.615436, 7.071840), 17));
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615811, 7.072427))
+                .title("Batiment E")
+                .snippet("4 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615436, 7.071840))
+                .title("Batiment O")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.615059, 7.071306))
+                .title("Batiment Forum")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_school_black_18dp)));
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(43.614827, 7.071574))
+                .title("Learning Center")
+                .snippet("3 niveaux")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_book_black_18dp)));
 
     }
 
