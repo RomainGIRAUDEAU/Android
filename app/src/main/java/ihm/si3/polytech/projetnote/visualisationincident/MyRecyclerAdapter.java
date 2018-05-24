@@ -58,7 +58,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             public boolean onLongClick(View view) {
                 if (!mishapList.get(position).isSelectedItem()) {
                     mishapList.get(position).setSelectedItem(true);
-                    holder.cardView.setBackgroundColor(Color.RED);
+                    holder.cardView.setBackgroundColor(Color.rgb(87, 155, 231));
+                    //   Drawable d = holder.cardView.getResources().getDrawable(android.R.drawable.list_selector_background);
                     selectedMishap.add(mishapList.get(position));
 
                 } else {

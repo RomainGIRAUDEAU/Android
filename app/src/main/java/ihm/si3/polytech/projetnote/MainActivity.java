@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private boolean doItFirst = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
