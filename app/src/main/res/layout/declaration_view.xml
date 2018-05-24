@@ -67,7 +67,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -85,15 +85,32 @@
                     <Spinner
                         android:id="@+id/spinnerBatiment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/batListe"
-                        android:layout_weight="1" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:entries="@array/batListe" />
 
-                    <Spinner
-                        android:id="@+id/spinnerSalle"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <Spinner
+                            android:id="@+id/spinnerSalle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/textInputAutre"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:ems="10"
+                            android:hint="Autre"
+                            android:inputType="textPersonName"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
