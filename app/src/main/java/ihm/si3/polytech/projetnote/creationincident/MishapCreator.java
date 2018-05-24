@@ -156,8 +156,8 @@ public class MishapCreator extends Fragment  {
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
                 if(mLocation!=null) {
-                    mishap.setxPos(mLocation.getLongitude());
-                    mishap.setyPos(mLocation.getLatitude());
+                    mishap.setxPos(mLocation.getLatitude());
+                    mishap.setyPos(mLocation.getLongitude());
                 }else{
                     mishap.setxPos((double) 0);
                     mishap.setyPos((double) 0);
