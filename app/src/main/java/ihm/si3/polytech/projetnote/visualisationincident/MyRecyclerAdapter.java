@@ -21,6 +21,7 @@ import java.util.List;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
+import ihm.si3.polytech.projetnote.utility.Images;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
 
@@ -87,9 +88,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         holder.titleMishap.setText(currentMishap.getTitle());
         holder.description.setText(currentMishap.getDescription());
         holder.username.setText(currentMishap.getAuthor());
-        if(currentMishap.getImageUrl() != null) {
+        if(currentMishap.getImages().size() > 0 && currentMishap.getImages().get(0) != null) {
             try {
-                holder.photoMishap.setImageBitmap(decodeFromFirebaseBase64(currentMishap.getImageUrl()));
+                holder.photoMishap.setImageBitmap(decodeFromFirebaseBase64(currentMishap.getImages().get(0)));
             } catch (IOException e) {
                 e.printStackTrace();
             }

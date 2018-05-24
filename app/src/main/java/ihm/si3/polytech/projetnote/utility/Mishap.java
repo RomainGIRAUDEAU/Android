@@ -3,6 +3,8 @@ package ihm.si3.polytech.projetnote.utility;
 import com.google.android.gms.maps.model.Marker;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user on 08/04/2018.
@@ -21,7 +23,7 @@ public class Mishap implements Serializable {
     private String dateEnd;
     private String place;
     private String urlPicture;
-    private String imageUrl;
+    private List<String> images;
     private Double xPos;
     private Double yPos;
     private boolean selectedItem;
@@ -29,7 +31,7 @@ public class Mishap implements Serializable {
 
 
     public Mishap() {
-
+        images = new ArrayList<>();
     }
 
     public Marker getMarker() {
@@ -121,12 +123,12 @@ public class Mishap implements Serializable {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void addImage(String image) {
+        images.add(image);
     }
 
     public Double getxPos() {

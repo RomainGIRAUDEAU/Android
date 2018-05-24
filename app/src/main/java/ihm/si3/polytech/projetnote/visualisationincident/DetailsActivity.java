@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import java.io.IOException;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
+import ihm.si3.polytech.projetnote.utility.Images;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 
 public class DetailsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -31,12 +34,15 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
     private GoogleMap mMap;
 
     private TextView title;
-    private ImageView photo;
+    private Images photos;
     private TextView etat;
     private TextView description;
     private ImageView usrPicture;
     private TextView usrName;
     private TextView date;
+    private ImageButton previous;
+    private ImageButton next;
+    private int photoPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +57,13 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
 
     private void loadMishap() {
         title.setText(mishap.getTitle());
-        if(mishap.getImageUrl() != null) {
+        for(String imageUrl : mishap.getImages()) {
             try {
-                photo.setImageBitmap(MyRecyclerAdapter.decodeFromFirebaseBase64(mishap.getImageUrl()));
+                photos.addBitmap(MyRecyclerAdapter.decodeFromFirebaseBase64(imageUrl));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            photos.refresh(0);
         }
         etat.setText(mishap.getPriority().toString());
         description.setText(mishap.getDescription());
@@ -87,13 +94,30 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
             startBeermay(); // <-- Start Beemray here
         }
 
+        photoPos = 0;
         title = this.findViewById(R.id.title);
-        photo = this.findViewById(R.id.imageView4);
+        photos = new Images((ImageView)this.findViewById(R.id.imageView4));
         etat = this.findViewById(R.id.etat);
         description = this.findViewById(R.id.description);
         usrPicture = this.findViewById(R.id.person_picture);
         usrName = this.findViewById(R.id.person_username);
         date = this.findViewById(R.id.date);
+        previous = this.findViewById(R.id.previous);
+        next = this.findViewById(R.id.next);
+
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(photos.refresh(photoPos-1)) --photoPos;
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(photos.refresh(photoPos+1)) ++photoPos;
+            }
+        });
 
         loadMishap();
     }

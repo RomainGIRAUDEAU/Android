@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Batiment;
+import ihm.si3.polytech.projetnote.utility.Images;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
 import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
@@ -54,9 +55,10 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     private static final String ARG_SECTION_NUMBER = "1";
     static final int REQUEST_IMAGE_CAPTURE = 111;
     private DatabaseReference databaseReference;
-    private ImageView imageView;
     private Bitmap imageBitmap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private int imagePos;
+    private Images images;
     Spinner s1,s2;
     List<Batiment> batList;
     Location mLocation;
@@ -92,21 +94,9 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
-            encodeBitmapAndSaveToFirebase(imageBitmap);
+            imagePos = images.addBitmap(imageBitmap);
         }
     }
-
-    private void encodeBitmapAndSaveToFirebase(Bitmap imageBitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("imageUrl");
-        ref.setValue(imageEncoded);
-    }
-
 
     public void onLaunchCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -121,7 +111,10 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Button button = getActivity().findViewById(R.id.valider);
         ImageButton buttonPicture = getActivity().findViewById(R.id.takePicture);
-        imageView = getActivity().findViewById(R.id.imageView);
+        images = new Images((ImageView)getActivity().findViewById(R.id.imageView));
+        imagePos = 0;
+        ImageButton buttonPrevious = getActivity().findViewById(R.id.previous);
+        ImageButton buttonNext = getActivity().findViewById(R.id.next);
         Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
         s1 = getActivity().findViewById(R.id.spinnerBatiment);
@@ -143,17 +136,23 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         }
 
         buttonPicture.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 onLaunchCamera();
             }
+        });
 
-            private void dispatchTakePictureIntent() {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+        buttonPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(images.refresh(imagePos-1)) --imagePos;
+            }
+        });
+
+        buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(images.refresh(imagePos+1)) ++imagePos;
             }
         });
 
@@ -199,11 +198,12 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 }
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
 
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-
-                mishap.setImageUrl(imageEncoded);
+                for(Bitmap bitmap : images.getImages()) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+                    mishap.addImage(imageEncoded);
+                }
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
                 String id = databaseReference.push().getKey();
