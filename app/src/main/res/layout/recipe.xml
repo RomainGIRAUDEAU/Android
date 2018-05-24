@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -31,11 +32,12 @@
 
                 <EditText
                     android:id="@+id/title"
-                    android:layout_width="match_parent"
+                    android:layout_width="428dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:hint="Title"
                     android:inputType="textPersonName" />
+
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -52,18 +54,69 @@
             </android.support.design.widget.TextInputLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textLieu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lieu"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinnerBatiment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/batListe"
+                        android:layout_weight="1" />
+
+                    <Spinner
+                        android:id="@+id/spinnerSalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Spinner
-                    android:id="@+id/SpinnerFeedbackType"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:entries="@array/feedbacktypelist"
-                    android:hint="priorite"
-                    android:prompt="@string/priority"></Spinner>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textVide"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ugence" />
+
+                    <Spinner
+                        android:id="@+id/SpinnerFeedbackType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:entries="@array/feedbacktypelist"
+                        android:hint="priorite"
+                        android:prompt="@string/priority"></Spinner>
+                </LinearLayout>
+
             </android.support.design.widget.TextInputLayout>
 
             <ImageView
