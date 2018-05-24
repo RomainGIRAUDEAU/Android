@@ -82,7 +82,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
         setBatList();
-        return inflater.inflate(R.layout.recipe, parent, false);
+        return inflater.inflate(R.layout.declaration_view, parent, false);
     }
 
     @Override
