@@ -54,7 +54,7 @@
                     android:layout_width="428dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:hint="Title"
+                    android:hint="Title*"
                     android:inputType="textPersonName"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
             </android.support.design.widget.TextInputLayout>
@@ -83,7 +83,7 @@
                     android:id="@+id/textLieu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lieu"
+                    android:text="Lieu*"
                     android:textSize="18sp" />
 
                 <LinearLayout
@@ -183,6 +183,12 @@
                 android:onClick="valider"
                 android:background="@color/colorRed"
                 android:text="Valider" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="* Champs obligatoires" />
 
 
         </LinearLayout>

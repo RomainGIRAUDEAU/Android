@@ -183,10 +183,13 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         button.setOnClickListener(new View.OnClickListener() // do something on click
         {
             public void onClick(View v) {
-
+                String erreur="";
                 TextView title = getActivity().findViewById(R.id.title1);
                 TextView description = getActivity().findViewById(R.id.descriptionArticle);
                 Mishap mishap = new Mishap();
+                if(title.getText().toString().trim().equals("")){
+                    erreur+="Pas de Titre. \n";
+                }
                 mishap.setTitle(title.getText().toString().trim());
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
@@ -194,7 +197,19 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
                 mishap.setDate(date);
                 mishap.setState(State.TODO);
-
+                if (String.valueOf(s1.getSelectedItem()).equals("Autre")) {
+                    if(editText.getText().toString().trim().equals("")){
+                        erreur+="Pas de Lieux \n";
+                    }
+                    mishap.setLieu(editText.getText().toString().trim());
+                    editText.setText("");
+                }else if(String.valueOf(s1.getSelectedItem()).equals("Amphi")||String.valueOf(s1.getSelectedItem()).equals("Learning")){
+                    mishap.setLieu(s2.getSelectedItem().toString().trim());
+                }else if(String.valueOf(s1.getSelectedItem()).equals("Parking")) {
+                    mishap.setLieu(s1.getSelectedItem().toString().trim());
+                }else{
+                    mishap.setLieu("E"+s2.getSelectedItem().toString().trim());
+                }
                 if(mLocation!=null) {
                     mishap.setxPos(mLocation.getLatitude());
                     mishap.setyPos(mLocation.getLongitude());
@@ -209,13 +224,16 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
 
                 mishap.setImageUrl(imageEncoded);
-
-                databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
-                String id = databaseReference.push().getKey();
-                mishap.setId(id);
-                databaseReference.child(id).setValue(mishap);
-                Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
-
+                if(erreur.equals("")) {
+                    databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
+                    String id = databaseReference.push().getKey();
+                    mishap.setId(id);
+                    databaseReference.child(id).setValue(mishap);
+                    Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getContext(), erreur, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -346,9 +364,6 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
             dataAdapter.notifyDataSetChanged();
             s2.setAdapter(dataAdapter);
         }
-
-
-
 
     }
 
