@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,13 +31,13 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/title"
+                    android:id="@+id/title1"
                     android:layout_width="428dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:hint="Title"
-                    android:inputType="textPersonName" />
-
+                    android:inputType="textPersonName"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -50,7 +50,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:hint="Description"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
             </android.support.design.widget.TextInputLayout>
 
 
@@ -114,9 +115,8 @@
                         android:layout_marginBottom="20dp"
                         android:entries="@array/feedbacktypelist"
                         android:hint="priorite"
-                        android:prompt="@string/priority"></Spinner>
+                        android:prompt="@string/priority" />
                 </LinearLayout>
-
             </android.support.design.widget.TextInputLayout>
 
             <ImageView
@@ -148,11 +148,8 @@
 
             <Button
                 android:id="@+id/takePicture"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="40dp"
                 android:onClick="takePicture"
                 android:text="Take a picture!" />
@@ -160,11 +157,8 @@
 
             <Button
                 android:id="@+id/valider"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:onClick="valider"
                 android:text="Valider" />
 

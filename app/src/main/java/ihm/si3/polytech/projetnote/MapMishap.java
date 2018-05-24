@@ -50,7 +50,10 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -81,6 +84,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private FirebaseFunctions mFunctions;
     private MapView mapView;
     private GoogleMap googleMap;
+    List<Mishap> mishaps;
 
     MapCardRecycler mAdaptater;
 
@@ -97,7 +101,22 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         startBeermay1();
+
+
+        mishaps = new ArrayList<>();
         mFunctions = FirebaseFunctions.getInstance();
+
+
+        return inflater.inflate(R.layout.activity_mapline, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mapView = view.findViewById(R.id.map_view);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
+        mishapList = NewsGridFragment.getInstance().getSelectedMishap();
 
         test()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -127,19 +146,6 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                 });
 
 
-        return inflater.inflate(R.layout.activity_mapline, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mapView = view.findViewById(R.id.map_view);
-        mapView.onCreate(savedInstanceState);
-        mapView.onResume();
-        mapView.getMapAsync(this);//when you already implement OnMapReadyCallback in your fragment
-        mishapList = NewsGridFragment.getInstance().getSelectedMishap();
-        Toast.makeText(getContext(), "number of mishap " + mishapList.size(), Toast.LENGTH_LONG).show();
-
-
         // ViewCompat.setTransitionName(getActivity().findViewById(R.id.app_bar_layout));
 
 
@@ -152,7 +158,30 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
         googleMap = map;
         createSchool();
-        createMarker();
+        // createMarker();
+
+
+    }
+
+    private void createMarker() {
+
+
+        int i = mishaps.size();
+        for (Mishap mishap : mishaps) {
+
+            Marker p1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
+                    .title(mishap.getTitle()).snippet(mishap.getDescription()));
+            p1.setTag(i);
+            i--;
+            mishap.setNumber(i);
+            mishap.setMarker(p1);
+
+        }
+        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdaptater = new MapCardRecycler(mishaps);
+        recyclerView.setAdapter(mAdaptater);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
 
         // Add polylines and polygons to the map. This section shows just
@@ -184,32 +213,12 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
         }
 
-    }
-
-    private void createMarker() {
-        int i = 0;
-        for (Mishap mishap : mishapList) {
-
-            Marker p1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
-                    .title(mishap.getTitle()).snippet(mishap.getDescription()));
-            p1.setTag(i);
-            i++;
-            mishap.setNumber(i);
-            mishap.setMarker(p1);
-
-        }
-        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdaptater = new MapCardRecycler(mishapList);
-        recyclerView.setAdapter(mAdaptater);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
 
     }
 
     private List<LatLng> createLat() {
         List<LatLng> latLngs = new LinkedList<>();
-        for (Mishap mishap : mishapList) {
+        for (Mishap mishap : mishaps) {
             latLngs.add(new LatLng(mishap.getxPos(), mishap.getyPos()));
         }
         return latLngs;
@@ -336,7 +345,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     }
 
     private void createSchool() {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.615436, 7.071840), 17)); // TODO: 19/05/2018  je ne sais pas quelles cordonnées je dois prendre
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(43.615436, 7.071840), 17));
         googleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(43.615811, 7.072427))
                 .title("Batiment E")
@@ -373,7 +382,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
         localisation.put("yPos", y);
         data.put("myLocalisation", localisation);
         Gson gson = new Gson();
-        Object json = gson.toJson(mishapList);
+        final Object json = gson.toJson(mishapList);
 
         data.put("mishap", json);
 
@@ -383,12 +392,17 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override
                     public String then(@NonNull Task<HttpsCallableResult> task) {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        mishapList = (List<Mishap>) task.getResult().getData();
 
-                        return String.valueOf(mishapList.size());
+
+                        Gson gson = new GsonBuilder().create();
+                        String wanted = new Gson().toJson(task.getResult().getData());
+
+                        mishaps = gson.fromJson(wanted, new TypeToken<List<Mishap>>() {
+                        }.getType());
+
+                        createMarker();
+
+                        return String.valueOf(mishaps.size());
 
                     }
                 });

@@ -5,9 +5,9 @@ package ihm.si3.polytech.projetnote.utility;
  */
 
 public enum Priority {
-    HIGH,
-    LOW,
-    MEDIUM,
+    CRITICAL,
     MAJOR,
-    CRITICAL
+    HIGH,
+    MEDIUM,
+    LOW
 }

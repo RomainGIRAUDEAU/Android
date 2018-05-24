@@ -21,6 +21,7 @@ public class Mishap implements Serializable {
     private String dateEnd;
     private String place;
     private String urlPicture;
+    private String imageUrl;
     private Double xPos;
     private Double yPos;
     private boolean selectedItem;
@@ -28,7 +29,6 @@ public class Mishap implements Serializable {
 
 
     public Mishap() {
-
 
     }
 
@@ -119,6 +119,14 @@ public class Mishap implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Double getxPos() {
