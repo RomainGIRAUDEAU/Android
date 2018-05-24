@@ -375,7 +375,6 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private Task<String> test() {
 
         Map<String, Object> data = new HashMap<>();
-
         double x = location.getLatitude();
         double y = location.getLongitude();
         Map<String, Object> localisation = new HashMap<>();

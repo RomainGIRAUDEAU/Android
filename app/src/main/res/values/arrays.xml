@@ -7,4 +7,11 @@
         <item>@string/priority4</item>
         <item>@string/priority5</item>
     </string-array>
+    <string-array name="batListe">
+        <item>BatE</item>
+        <item>BatP</item>
+        <item>BatA</item>
+        <item>BatL</item>
+        <item>Autre</item>
+    </string-array>
 </resources>

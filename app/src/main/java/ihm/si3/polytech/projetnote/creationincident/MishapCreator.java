@@ -13,6 +13,8 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,19 +24,30 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import ihm.si3.polytech.projetnote.MainActivity;
+import ihm.si3.polytech.projetnote.Manifest;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
+import ihm.si3.polytech.projetnote.utility.Batiment;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
+import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MishapCreator extends Fragment  {
+public class MishapCreator extends Fragment implements AdapterView.OnItemSelectedListener {
 
 
     private static final String ARG_SECTION_NUMBER = "1";
@@ -43,6 +56,8 @@ public class MishapCreator extends Fragment  {
     private ImageView imageView;
     private Bitmap imageBitmap;
     private FusedLocationProviderClient mFusedLocationClient;
+    Spinner s1,s2;
+    List<Batiment> batList;
     Location mLocation;
 
     public MishapCreator() {
@@ -66,6 +81,7 @@ public class MishapCreator extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
+        setBatList();
         return inflater.inflate(R.layout.declaration_view, parent, false);
     }
 
@@ -107,6 +123,9 @@ public class MishapCreator extends Fragment  {
         imageView = getActivity().findViewById(R.id.imageView);
         Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
+        s1 = getActivity().findViewById(R.id.spinnerBatiment);
+        s2 = getActivity().findViewById(R.id.spinnerSalle);
+        s1.setOnItemSelectedListener(this);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
 
@@ -149,6 +168,7 @@ public class MishapCreator extends Fragment  {
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 setLocationText(location);
+                                //s1.setSelection(getPosition(getBestBat(mLocation)));
                             }
                         });
 
@@ -192,11 +212,71 @@ public class MishapCreator extends Fragment  {
             }
         });
     }
+    void setBatList(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Batiment");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                batList = new ArrayList<Batiment>();
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Batiment batiment= postSnapshot.getValue(Batiment.class);
+                    batList.add(batiment);
+                }
+                setSpinnerBat();
 
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("firebase error :" + firebaseError.getDetails());
+            }
+        });
+    }
+
+    private void setSpinnerBat() {
+        List<String> list = new ArrayList<String>();
+        for(Batiment bat:batList){
+            list.add(bat.getName());
+        }
+        list.add("Autre");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(),
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.notifyDataSetChanged();
+        s1.setAdapter(dataAdapter);
+        if(mLocation!=null) {
+            s1.setSelection(getPosition(getBestBat(mLocation)));
+        }
+    }
+
+    private int getPosition(String bestBat) {
+        for(int i=0;i<batList.size();i++){
+            if(bestBat.equals(batList.get(i).getName())){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private String getBestBat(Location l) {
+        double longitude = l.getLongitude();
+        double latitude=l.getLatitude();
+        double batLat1,batLat2,batLong1,batLong2;
+        for(Batiment bat:batList){
+            batLat1=bat.getLatitude1();batLat2=bat.getLatitude2();batLong1=bat.getLongitude1();batLong2=bat.getLongitude2();
+            if(((batLat1<latitude&&latitude<batLat2||batLat1>latitude&&latitude>batLat2)&&(batLong1<longitude&&longitude<batLong2||batLong1>longitude&&longitude>batLong2))){
+                return bat.getName();
+            }
+        }
+        return "Autre";
+
+    }
 
     private void saveMishap() {
 
     }
+
 
     private void setLocationText(Location l){
         TextView textGPS= getActivity().findViewById(R.id.textGPS);
@@ -209,8 +289,26 @@ public class MishapCreator extends Fragment  {
     }
 
 
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+                               long arg3) {
+        String sp1= String.valueOf(s1.getSelectedItem());
+        if(sp1.contentEquals("Income")) {
+            List<String> list = new ArrayList<String>();
+            list.add("Salary");//You should add items from db here (first spinner)
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(),
+                    android.R.layout.simple_spinner_item, list);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dataAdapter.notifyDataSetChanged();
+            s2.setAdapter(dataAdapter);
+        }
 
 
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
 
+    }
 }
