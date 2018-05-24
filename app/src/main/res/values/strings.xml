@@ -23,6 +23,7 @@
     <string name="sign_out">sign_out</string>
     <string name="disconnect">disconnect</string>
     <string name="info" />
+    <string name="in_news" />
 
 
 </resources>

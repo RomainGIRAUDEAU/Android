@@ -1,12 +1,14 @@
 package ihm.si3.polytech.projetnote.login;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -33,10 +35,12 @@ public class SignIn extends Activity {
 
     private static final int RC_SIGN_IN = 9001;
     private static final String ARG_SECTION_NUMBER = "section_number";
+    ImageView img;
     // Choose authentication providers
     List<AuthUI.IdpConfig> providers;
     TextView txtPhone;
     private SignInButton mGoogleButton;
+    private ProgressDialog mProgress;
 
     private static final String TAG = "GoogleActivity";
 
@@ -68,6 +72,11 @@ public class SignIn extends Activity {
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
+        mProgress = new ProgressDialog(this);
+        mProgress.setTitle("Processing...");
+        mProgress.setMessage("Please wait...");
+        mProgress.setCancelable(false);
+        mProgress.setIndeterminate(true);
         // [END initialize_auth]
 
 
@@ -78,12 +87,18 @@ public class SignIn extends Activity {
     public void onStart() {
 
         super.onStart();
+        img = findViewById(R.id.imageView4);
+        img.setImageResource(R.drawable.logo_appli);
+
+
 
         mGoogleButton = findViewById(R.id.signUp);
         mGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProgress.show();
                 signIn();
+
 
 
             }
@@ -106,10 +121,12 @@ public class SignIn extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+            mProgress.dismiss();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase

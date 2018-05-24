@@ -1,9 +1,14 @@
 package ihm.si3.polytech.projetnote.creationincident;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -15,12 +20,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+
+import ihm.si3.polytech.projetnote.MainActivity;
+import ihm.si3.polytech.projetnote.Manifest;
+import java.util.Calendar;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
@@ -29,7 +45,7 @@ import ihm.si3.polytech.projetnote.utility.Priority;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MishapCreator extends Fragment {
+public class MishapCreator extends Fragment  {
 
 
     static final int REQUEST_IMAGE_CAPTURE = 111;
@@ -37,6 +53,8 @@ public class MishapCreator extends Fragment {
     private StorageReference mStorage;
     private ImageView imageView;
     private Bitmap imageBitmap;
+    private FusedLocationProviderClient mFusedLocationClient;
+    Location mLocation;
 
     public MishapCreator() {
 
@@ -79,9 +97,23 @@ public class MishapCreator extends Fragment {
         Button button = getActivity().findViewById(R.id.valider);
         Button buttonPicture = getActivity().findViewById(R.id.takePicture);
         imageView = getActivity().findViewById(R.id.imageView);
+        mStorage = FirebaseStorage.getInstance().getReference();
+        Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
 
-        mStorage = FirebaseStorage.getInstance().getReference();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+
+                            setLocationText(location);
+                        }
+                    });
+        }
 
         buttonPicture.setOnClickListener(new View.OnClickListener() {
 
@@ -98,6 +130,24 @@ public class MishapCreator extends Fragment {
             }
         });
 
+        buttonGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                setLocationText(location);
+                            }
+                        });
+
+            }
+        });
+
         button.setOnClickListener(new View.OnClickListener() // do something on click
         {
             public void onClick(View v) {
@@ -109,6 +159,13 @@ public class MishapCreator extends Fragment {
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
+                if(mLocation!=null) {
+                    mishap.setxPos(mLocation.getLatitude());
+                    mishap.setyPos(mLocation.getLongitude());
+                }else{
+                    mishap.setxPos((double) 0);
+                    mishap.setyPos((double) 0);
+                }
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -118,8 +175,8 @@ public class MishapCreator extends Fragment {
                 mishap.setImageUrl(imageEncoded);
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
-
-                databaseReference.child(mishap.getTitle()).setValue(mishap);
+                String id = databaseReference.push().getKey();
+                databaseReference.child(id).setValue(mishap);
                 Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
 
             }
@@ -130,6 +187,19 @@ public class MishapCreator extends Fragment {
     private void saveMishap() {
 
     }
+
+    private void setLocationText(Location l){
+        TextView textGPS= getActivity().findViewById(R.id.textGPS);
+        if (l!=null){
+            this.mLocation=l;
+            textGPS.setText("Longitude : "+l.getLongitude()+"/Latitude : "+l.getLatitude());
+        }else{
+            textGPS.setText("Longitude : N /Latitude : N");
+        }
+    }
+
+
+
 
 
 

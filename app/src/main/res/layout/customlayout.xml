@@ -1,61 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:background="#2861"
+    android:orientation="horizontal">
+
+    <!-- Green triangles for badge -->
+
 
     <android.support.v7.widget.CardView
+        android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cv">
+        android:layout_marginTop="17dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="2dp"
+        card_view:cardPreventCornerOverlap="false"
+        card_view:cardUseCompatPadding="true">
 
-        <RelativeLayout
+        <!-- badge -->
+        <com.battleent.ribbonviews.RibbonLayout
+            android:id="@+id/ribbonTag"
             android:layout_width="match_parent"
-            android:layout_height="204dp"
-            android:padding="16dp">
+            android:layout_height="match_parent"
+            app:bottom_height="50"
+            app:bottom_padding="11"
+            app:bottom_ribbonColor="@color/pale_magenta_90"
+            app:bottom_textColor="@android:color/white"
+            app:bottom_textSize="10"
+            app:header_padding="5"
+            app:header_ribbonColor="@color/colorPrimary"
+            app:header_ribbonRadius="6"
+            app:header_textColor="@android:color/white"
+            app:header_textSize="10"
+            app:show_bottom="true"
+            app:show_header="true">
 
-            <ImageView
-                android:id="@+id/card_mishap"
-                android:layout_width="81dp"
-                android:layout_height="94dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="16dp" />
 
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/card_mishap"
-                android:textSize="30sp" />
+            <RelativeLayout
 
-            <TextView
-                android:id="@+id/card_description"
-                android:layout_width="234dp"
-                android:layout_height="35dp"
-                android:layout_below="@+id/card_title"
-                android:layout_toRightOf="@+id/card_mishap" />
 
-            <ImageView
-                android:id="@+id/person_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/person_username"
-                android:layout_alignEnd="@+id/card_mishap"
-                app:srcCompat="@android:drawable/stat_sys_upload" />
+                android:layout_width="match_parent"
+                android:layout_height="204dp"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/person_username"
-                android:layout_width="234dp"
-                android:layout_height="35dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/card_title"
-                android:layout_marginBottom="43dp" />
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/card_mishap"
+                    android:layout_width="81dp"
+                    android:layout_height="94dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="16dp" />
+
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/card_mishap"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/card_description"
+                    android:layout_width="234dp"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/card_title"
+                    android:layout_toRightOf="@+id/card_mishap" />
+
+                <ImageView
+                    android:id="@+id/person_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/person_username"
+                    android:layout_alignEnd="@+id/card_mishap"
+                    app:srcCompat="@android:drawable/stat_sys_upload" />
+
+                <TextView
+                    android:id="@+id/person_username"
+                    android:layout_width="234dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/card_title"
+                    android:layout_marginBottom="32dp" />
+
+            </RelativeLayout>
+
+        </com.battleent.ribbonviews.RibbonLayout>
+
 
     </android.support.v7.widget.CardView>
+
 
 </LinearLayout>
