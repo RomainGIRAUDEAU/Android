@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,10 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
@@ -27,12 +32,13 @@ import static android.app.Activity.RESULT_OK;
 public class MishapCreator extends Fragment {
 
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String ARG_SECTION_NUMBER = "1";
+    static final int REQUEST_IMAGE_CAPTURE = 111;
     private DatabaseReference databaseReference;
+    private StorageReference mStorage;
+    private ImageView imageView;
+    private Bitmap imageBitmap;
 
     public MishapCreator() {
-
 
     }
 
@@ -58,10 +64,10 @@ public class MishapCreator extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView imageView = getActivity().findViewById(R.id.imageView);
+            imageBitmap = (Bitmap) extras.get("data");
             imageView.setImageBitmap(imageBitmap);
         }
     }
@@ -72,7 +78,10 @@ public class MishapCreator extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Button button = getActivity().findViewById(R.id.valider);
         Button buttonPicture = getActivity().findViewById(R.id.takePicture);
+        imageView = getActivity().findViewById(R.id.imageView);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
+
+        mStorage = FirebaseStorage.getInstance().getReference();
 
         buttonPicture.setOnClickListener(new View.OnClickListener() {
 
@@ -101,6 +110,12 @@ public class MishapCreator extends Fragment {
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
                 mishap.setUrlPicture(StoreUsers.getUrlPicture());
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                String imageEncoded = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+
+                mishap.setImageUrl(imageEncoded);
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
 

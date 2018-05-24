@@ -16,9 +16,9 @@ public class Mishap {
     private String dateEnd;
     private String place;
     private String urlPicture;
+    private String imageUrl;
 
     public Mishap() {
-
 
     }
 
@@ -101,5 +101,13 @@ public class Mishap {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
