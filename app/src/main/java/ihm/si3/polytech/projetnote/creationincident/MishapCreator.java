@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -119,7 +120,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Button button = getActivity().findViewById(R.id.valider);
-        Button buttonPicture = getActivity().findViewById(R.id.takePicture);
+        ImageButton buttonPicture = getActivity().findViewById(R.id.takePicture);
         imageView = getActivity().findViewById(R.id.imageView);
         Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
