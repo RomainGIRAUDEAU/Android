@@ -153,6 +153,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 setLocationText(location);
+                                //s1.setSelection(getPosition(getBestBat(mLocation)));
                             }
                         });
 
@@ -220,7 +221,9 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataAdapter.notifyDataSetChanged();
         s1.setAdapter(dataAdapter);
-        s1.setSelection(getPosition(getBestBat(mLocation)));
+        if(mLocation!=null) {
+            s1.setSelection(getPosition(getBestBat(mLocation)));
+        }
     }
 
     private int getPosition(String bestBat) {
