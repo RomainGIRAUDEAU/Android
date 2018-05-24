@@ -8,6 +8,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
@@ -19,10 +20,19 @@
             android:text="Ajout d'incident :"
             android:textSize="35dp" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/title"
+            android:layout_centerHorizontal="true" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
+            android:layout_below="@+id/imageView"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
@@ -67,13 +77,6 @@
                     android:hint="priorite"
                     android:prompt="@string/priority" />
             </android.support.design.widget.TextInputLayout>
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/button_image"
-                android:layout_centerHorizontal="true" />
 
             <LinearLayout
                 android:layout_width="match_parent"
