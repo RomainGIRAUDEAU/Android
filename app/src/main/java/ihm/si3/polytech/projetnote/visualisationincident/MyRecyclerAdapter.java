@@ -1,9 +1,12 @@
 package ihm.si3.polytech.projetnote.visualisationincident;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.battleent.ribbonviews.RibbonLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +41,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customlayout, parent, false);
         return new MyViewHolder(view);
+    }
+
+    public static Bitmap decodeFromFirebaseBase64(String image) throws IOException {
+        byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
 
     @Override
@@ -78,6 +87,13 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         holder.titleMishap.setText(currentMishap.getTitle());
         holder.description.setText(currentMishap.getDescription());
         holder.username.setText(currentMishap.getAuthor());
+        if(currentMishap.getImageUrl() != null) {
+            try {
+                holder.photoMishap.setImageBitmap(decodeFromFirebaseBase64(currentMishap.getImageUrl()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         String priority = currentMishap.getPriority().name();
         if (currentMishap.getDate() != null) {
             holder.ribbonLayout.setBottomText(currentMishap.getDate());
@@ -117,6 +133,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         public TextView description;
         public TextView username;
         public ImageView imagePerson;
+        public ImageView photoMishap;
         public CardView cardView;
         public RibbonLayout ribbonLayout;
 
@@ -126,6 +143,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             description = view.findViewById(R.id.card_description);
             username = view.findViewById(R.id.person_username);
             imagePerson = view.findViewById(R.id.person_picture);
+            photoMishap = view.findViewById(R.id.card_mishap);
             cardView = view.findViewById(R.id.cv);
             ribbonLayout = view.findViewById(R.id.ribbonTag);
 
