@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -148,8 +149,6 @@ public class SignIn extends Activity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        // [END_EXCLUDE]
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -214,6 +213,7 @@ public class SignIn extends Activity {
             StoreUsers.setMailAdress(user.getEmail());
             StoreUsers.setUrlPicture(user.getPhotoUrl().toString());
             StoreUsers.setUserName(user.getDisplayName());
+            Toast.makeText(this, "Bienvenue " + StoreUsers.getUserName() + " sur notre application", Toast.LENGTH_SHORT).show();
 
 
         } else {

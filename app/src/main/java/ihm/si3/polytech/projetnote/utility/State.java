@@ -6,7 +6,6 @@ package ihm.si3.polytech.projetnote.utility;
 
 public enum State {
     TODO,
-    INPROGRESS,
     DONE
 }
 

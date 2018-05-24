@@ -11,7 +11,9 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
 
     private Handler mHandler;
     private Runnable mAnimation;
+    private GoogleMap googleMap;
 
     private List<Mishap> mishapList;
 
@@ -56,11 +59,20 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
 
                 // Cancels the previous animation
                 mHandler.removeCallbacks(mAnimation);
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mishapList.get(position).getxPos(), mishapList.get(position).getyPos()), 17));
+                marker.showInfoWindow();
 
                 // Starts the bounce animation
                 mAnimation = new BounceAnimation(start, duration, marker, mHandler);
                 mHandler.post(mAnimation);
 
+            }
+        });
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mishapList.remove(position);
+                return true;
             }
         });
 
@@ -147,5 +159,7 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
         }
     }
 
-
+    public void setGoogleMap(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+    }
 }

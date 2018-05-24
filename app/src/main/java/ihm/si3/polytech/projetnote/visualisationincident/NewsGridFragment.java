@@ -4,39 +4,30 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.FirebaseFunctionsException;
-import com.google.firebase.functions.HttpsCallableResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.MishapComparator;
-
-import static com.firebase.ui.auth.ui.email.RegisterEmailFragment.TAG;
+import ihm.si3.polytech.projetnote.utility.State;
 
 /**
  * Created by user on 26/03/2018.
@@ -105,7 +96,9 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
                 articleList = new ArrayList<>();
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Mishap climate = postSnapshot.getValue(Mishap.class);
-                    articleList.add(climate);
+                    if (climate.getState() != State.DONE || climate.getState() == null) {
+                        articleList.add(climate);
+                    }
                 }
                 articleList.sort(new MishapComparator());
 
@@ -121,33 +114,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
             }
         });
 
-        // [START call_add_message]
-        addMessage("test")
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Exception e = task.getException();
-                            if (e instanceof FirebaseFunctionsException) {
-                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                                FirebaseFunctionsException.Code code = ffe.getCode();
-                                Object details = ffe.getDetails();
-                            }
 
-                            // [START_EXCLUDE]
-                            Log.w(TAG, "addMessage:onFailure", e);
-                            //showSnackbar("An error occurred.");
-                            return;
-                            // [END_EXCLUDE]
-                        }
-
-                        // [START_EXCLUDE]
-                        String result = task.getResult();
-                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-                        // mMessageOutputField.setText(result);
-                        // [END_EXCLUDE]
-                    }
-                });
 
 
 
@@ -171,7 +138,13 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
             @Override
             public void onLeftClicked(int position) {
                 Toast.makeText(getContext(), "your select mishap " + articleList.get(position), Toast.LENGTH_LONG).show();
-                //  selectedMishap.add(articleList.get(position));
+                State state = articleList.get(position).getState();
+                articleList.get(position).setState(State.DONE);
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("mishap").child(articleList.get(position).getId());
+                HashMap<String, Object> updateState = new HashMap<>();
+                updateState.put("state", State.DONE);
+                databaseReference.updateChildren(updateState);
+
 
 
             }
@@ -199,26 +172,7 @@ public class NewsGridFragment extends android.support.v4.app.Fragment {
     }
 
 
-    // [START function_add_message]
-    private Task<String> addMessage(String text) {
-        // Create the arguments to the callable function, which is just one string
-        Map<String, Object> data = new HashMap<>();
-        data.put("text", text);
 
-        return mFunctions
-                .getHttpsCallable("addMessage")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, String>() {
-                    @Override
-                    public String then(@NonNull Task<HttpsCallableResult> task) {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        String result = (String) task.getResult().getData();
-                        return result;
-                    }
-                });
-    }
 
 
 
