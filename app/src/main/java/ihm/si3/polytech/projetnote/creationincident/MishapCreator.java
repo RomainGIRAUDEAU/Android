@@ -31,20 +31,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import ihm.si3.polytech.projetnote.MainActivity;
-import ihm.si3.polytech.projetnote.Manifest;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.login.StoreUsers;
 import ihm.si3.polytech.projetnote.utility.Batiment;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
-import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
+import ihm.si3.polytech.projetnote.utility.State;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -189,6 +185,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 mishap.setAuthor(StoreUsers.getUserName());
                 String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
                 mishap.setDate(date);
+                mishap.setState(State.TODO);
 
                 if(mLocation!=null) {
                     mishap.setxPos(mLocation.getLatitude());
@@ -207,6 +204,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
 
                 databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
                 String id = databaseReference.push().getKey();
+                mishap.setId(id);
                 databaseReference.child(id).setValue(mishap);
                 Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
 

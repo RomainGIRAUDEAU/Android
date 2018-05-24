@@ -16,7 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -177,9 +177,10 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
             mishap.setMarker(p1);
 
         }
-        RecyclerView recyclerView = getActivity().findViewById(R.id.post_rcycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView recyclerView = getActivity().findViewById(R.id.my_recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdaptater = new MapCardRecycler(mishaps);
+        mAdaptater.setGoogleMap(googleMap);
         recyclerView.setAdapter(mAdaptater);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 

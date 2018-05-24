@@ -26,10 +26,19 @@ public class Mishap implements Serializable {
     private Double yPos;
     private boolean selectedItem;
     private Marker marker;
+    private String id;
 
 
     public Mishap() {
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Marker getMarker() {
@@ -160,4 +169,6 @@ public class Mishap implements Serializable {
     public void setSelectedItem(boolean selectedItem) {
         this.selectedItem = selectedItem;
     }
+
+
 }
