@@ -138,6 +138,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
                         }
 
                         // [START_EXCLUDE]
+
                         String result = task.getResult();
                         // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         // mMessageOutputField.setText(result);
