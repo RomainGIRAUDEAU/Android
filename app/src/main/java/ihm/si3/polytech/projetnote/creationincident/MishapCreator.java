@@ -188,8 +188,13 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 Mishap mishap = new Mishap();
                 if(title.getText().toString().trim().equals("")){
                     erreur+="Pas de Titre. \n";
+                }else if(title.getText().toString().trim().length()>15){
+                    erreur+="Titre trop long\n";
                 }
                 mishap.setTitle(title.getText().toString().trim());
+                if(description.getText().toString().trim().length()>60){
+                    erreur+="Description trop longue\n";
+                }
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
                 mishap.setAuthor(StoreUsers.getUserName());
@@ -199,6 +204,8 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 if (String.valueOf(s1.getSelectedItem()).equals("Autre")) {
                     if(editText.getText().toString().trim().equals("")){
                         erreur+="Pas de Lieux \n";
+                    }else if(editText.getText().toString().trim().length()>10){
+                        erreur+="Lieu trop long\n";
                     }else {
                         mishap.setLieu(editText.getText().toString().trim());
                         editText.setText("");
