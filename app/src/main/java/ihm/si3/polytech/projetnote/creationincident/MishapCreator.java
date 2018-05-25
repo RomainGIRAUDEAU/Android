@@ -199,9 +199,10 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 if (String.valueOf(s1.getSelectedItem()).equals("Autre")) {
                     if(editText.getText().toString().trim().equals("")){
                         erreur+="Pas de Lieux \n";
+                    }else {
+                        mishap.setLieu(editText.getText().toString().trim());
+                        editText.setText("");
                     }
-                    mishap.setLieu(editText.getText().toString().trim());
-                    editText.setText("");
                 }else if(String.valueOf(s1.getSelectedItem()).equals("Amphi")||String.valueOf(s1.getSelectedItem()).equals("Learning")){
                     mishap.setLieu(s2.getSelectedItem().toString().trim());
                 }else if(String.valueOf(s1.getSelectedItem()).equals("Parking")) {
@@ -238,6 +239,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
             }
         });
     }
+
     void setBatList(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Batiment");
         databaseReference.addValueEventListener(new ValueEventListener() {
