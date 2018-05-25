@@ -232,6 +232,8 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                     mishap.setId(id);
                     databaseReference.child(id).setValue(mishap);
                     Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
+                    title.setText("");
+                    description.setText("");
                 }
                 else{
                     Toast.makeText(getContext(), erreur, Toast.LENGTH_LONG).show();
@@ -335,7 +337,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         TextView textGPS= getActivity().findViewById(R.id.textGPS);
         if (l!=null){
             this.mLocation=l;
-            textGPS.setText("Longitude : "+l.getLongitude()+"/Latitude : "+l.getLatitude());
+            textGPS.setText("Longitude : "+l.getLongitude()+"\nLatitude : "+l.getLatitude());
         }else{
             textGPS.setText("Longitude : N /Latitude : N");
         }
