@@ -117,7 +117,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         imagePos = 0;
         ImageButton buttonPrevious = getActivity().findViewById(R.id.previous);
         ImageButton buttonNext = getActivity().findViewById(R.id.next);
-        Button buttonGPS = getActivity().findViewById(R.id.btnGPS);
+        ImageButton buttonGPS = getActivity().findViewById(R.id.btnGPS);
         final Spinner spinner = getActivity().findViewById(R.id.SpinnerFeedbackType);
         s1 = getActivity().findViewById(R.id.spinnerBatiment);
         s2 = getActivity().findViewById(R.id.spinnerSalle);
