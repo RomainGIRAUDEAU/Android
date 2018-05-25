@@ -29,10 +29,19 @@ public class Mishap implements Serializable {
     private boolean selectedItem;
     private Marker marker;
     private String id;
+    private String lieu;
 
 
     public Mishap() {
         images = new ArrayList<>();
+    }
+
+    public String getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
     }
 
     public String getId() {

@@ -72,7 +72,7 @@
                     android:layout_width="428dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:hint="Title"
+                    android:hint="Title*"
                     android:inputType="textPersonName"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
             </android.support.design.widget.TextInputLayout>
@@ -94,14 +94,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textLieu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lieu"
+                    android:text="Lieu*"
                     android:textSize="18sp" />
 
                 <LinearLayout
@@ -112,15 +112,32 @@
                     <Spinner
                         android:id="@+id/spinnerBatiment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/batListe"
-                        android:layout_weight="1" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:entries="@array/batListe" />
 
-                    <Spinner
-                        android:id="@+id/spinnerSalle"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <Spinner
+                            android:id="@+id/spinnerSalle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/textInputAutre"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:ems="10"
+                            android:hint="Autre"
+                            android:inputType="textPersonName"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -187,6 +204,12 @@
                 android:onClick="valider"
                 android:background="@color/colorRed"
                 android:text="Valider" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="* Champs obligatoires" />
 
 
         </LinearLayout>

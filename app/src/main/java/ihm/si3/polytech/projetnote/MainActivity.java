@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0)
-                return "Incident";
+                return "Incidents";
             else if (position == 1)
                 return "Formulaire";
             else return "map";

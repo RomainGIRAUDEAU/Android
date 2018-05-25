@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -41,6 +43,8 @@ import ihm.si3.polytech.projetnote.utility.Batiment;
 import ihm.si3.polytech.projetnote.utility.Images;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
+import ihm.si3.polytech.projetnote.utility.Salle;
+import ihm.si3.polytech.projetnote.visualisationincident.MyRecyclerAdapter;
 import ihm.si3.polytech.projetnote.utility.State;
 
 import static android.app.Activity.RESULT_OK;
@@ -56,8 +60,10 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     private int imagePos;
     private Images images;
     Spinner s1,s2;
+    EditText editText;
     List<Batiment> batList;
     Location mLocation;
+    List<Salle> salleList;
 
     public MishapCreator() {
 
@@ -117,6 +123,8 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         s2 = getActivity().findViewById(R.id.spinnerSalle);
         s1.setOnItemSelectedListener(this);
 
+        editText=getActivity().findViewById(R.id.textInputAutre);
+        editText.setVisibility(View.GONE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
 
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -164,7 +172,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 setLocationText(location);
-                                //s1.setSelection(getPosition(getBestBat(mLocation)));
+                                s1.setSelection(getPosition(getBestBat(mLocation)));
                             }
                         });
 
@@ -174,10 +182,13 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         button.setOnClickListener(new View.OnClickListener() // do something on click
         {
             public void onClick(View v) {
-
+                String erreur="";
                 TextView title = getActivity().findViewById(R.id.title1);
                 TextView description = getActivity().findViewById(R.id.descriptionArticle);
                 Mishap mishap = new Mishap();
+                if(title.getText().toString().trim().equals("")){
+                    erreur+="Pas de Titre. \n";
+                }
                 mishap.setTitle(title.getText().toString().trim());
                 mishap.setDescription(description.getText().toString().trim());
                 mishap.setPriority(Priority.valueOf(spinner.getSelectedItem().toString()));
@@ -185,7 +196,20 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 String date = (String) android.text.format.DateFormat.format("yyyy-MM-dd", new java.util.Date());
                 mishap.setDate(date);
                 mishap.setState(State.TODO);
-
+                if (String.valueOf(s1.getSelectedItem()).equals("Autre")) {
+                    if(editText.getText().toString().trim().equals("")){
+                        erreur+="Pas de Lieux \n";
+                    }else {
+                        mishap.setLieu(editText.getText().toString().trim());
+                        editText.setText("");
+                    }
+                }else if(String.valueOf(s1.getSelectedItem()).equals("Amphi")||String.valueOf(s1.getSelectedItem()).equals("Learning")){
+                    mishap.setLieu(s2.getSelectedItem().toString().trim());
+                }else if(String.valueOf(s1.getSelectedItem()).equals("Parking")) {
+                    mishap.setLieu(s1.getSelectedItem().toString().trim());
+                }else{
+                    mishap.setLieu("E"+s2.getSelectedItem().toString().trim());
+                }
                 if(mLocation!=null) {
                     mishap.setxPos(mLocation.getLatitude());
                     mishap.setyPos(mLocation.getLongitude());
@@ -202,15 +226,20 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                     mishap.addImage(imageEncoded);
                 }
 
-                databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
-                String id = databaseReference.push().getKey();
-                mishap.setId(id);
-                databaseReference.child(id).setValue(mishap);
-                Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
-
+                if(erreur.equals("")) {
+                    databaseReference = FirebaseDatabase.getInstance().getReference("mishap");
+                    String id = databaseReference.push().getKey();
+                    mishap.setId(id);
+                    databaseReference.child(id).setValue(mishap);
+                    Toast.makeText(getContext(), "Information Save", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getContext(), erreur, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
     void setBatList(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Batiment");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -221,11 +250,29 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                     Batiment batiment= postSnapshot.getValue(Batiment.class);
                     batList.add(batiment);
                 }
-                setSpinnerBat();
+                setSalleList();
+
 
             }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("firebase error :" + firebaseError.getDetails());
+            }
+        });
+    }
 
-
+    private void setSalleList() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("salles");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                salleList = new ArrayList<Salle>();
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Salle salle= postSnapshot.getValue(Salle.class);
+                    salleList.add(salle);
+                }
+                setSpinnerBat();
+            }
             @Override
             public void onCancelled(DatabaseError firebaseError) {
                 System.out.println("firebase error :" + firebaseError.getDetails());
@@ -255,7 +302,7 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
                 return i;
             }
         }
-        return 0;
+        return batList.size();
     }
 
     private String getBestBat(Location l) {
@@ -264,7 +311,14 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
         double batLat1,batLat2,batLong1,batLong2;
         for(Batiment bat:batList){
             batLat1=bat.getLatitude1();batLat2=bat.getLatitude2();batLong1=bat.getLongitude1();batLong2=bat.getLongitude2();
-            if(((batLat1<latitude&&latitude<batLat2||batLat1>latitude&&latitude>batLat2)&&(batLong1<longitude&&longitude<batLong2||batLong1>longitude&&longitude>batLong2))){
+            if((  ((batLat1<latitude)
+                    && (latitude<batLat2))
+                    || ((batLat1>latitude)
+                    &&(latitude>batLat2)))
+                    &&(  ((batLong1<longitude)
+                    && (longitude<batLong2))
+                    || ((batLong1>longitude)
+                    && (longitude>batLong2)) )){
                 return bat.getName();
             }
         }
@@ -292,17 +346,27 @@ public class MishapCreator extends Fragment implements AdapterView.OnItemSelecte
     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
                                long arg3) {
         String sp1= String.valueOf(s1.getSelectedItem());
-        if(sp1.contentEquals("Income")) {
+        if(sp1.contentEquals("Autre")) {
+            s2.setVisibility(View.GONE);
+            editText.setVisibility(View.VISIBLE);
+        }
+        else {
+            s2.setVisibility(View.VISIBLE);
+            editText.setVisibility(View.GONE);
             List<String> list = new ArrayList<String>();
-            list.add("Salary");//You should add items from db here (first spinner)
-
+            if(salleList!=null) {
+                for (Salle salle : salleList) {
+                    if (sp1.equals(salle.getBatiment())) {
+                        list.add(salle.getNumero());
+                    }
+                }
+            }
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dataAdapter.notifyDataSetChanged();
             s2.setAdapter(dataAdapter);
         }
-
 
     }
 
