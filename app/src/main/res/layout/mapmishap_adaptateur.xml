@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="20dp"
+    android:layout_marginTop="30dp"
 
     android:orientation="horizontal">
 
@@ -40,11 +41,19 @@
 
             <TextView
                 android:id="@+id/card_title"
-                android:layout_width="200dp"
+                android:layout_width="168dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="38dp"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@id/batiment"
+                android:layout_width="185dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/main_letter"
+                android:layout_alignStart="@+id/card_title" />
 
 
         </RelativeLayout>

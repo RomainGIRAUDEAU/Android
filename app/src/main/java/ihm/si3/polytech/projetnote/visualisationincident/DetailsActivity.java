@@ -19,8 +19,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
 import ihm.si3.polytech.projetnote.utility.Images;
@@ -42,6 +40,7 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
     private TextView date;
     private ImageButton previous;
     private ImageButton next;
+    private TextView batiment;
     private int photoPos;
 
     @Override
@@ -56,21 +55,18 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     private void loadMishap() {
-        title.setText(mishap.getTitle());
+        title.setText("Titre :" + mishap.getTitle());
         for(String imageUrl : mishap.getImages()) {
-            try {
-                photos.addBitmap(MyRecyclerAdapter.decodeFromFirebaseBase64(imageUrl));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            photos.addBitmap(MyRecyclerAdapter.decodeFromFirebaseBase64(imageUrl));
             photos.refresh(0);
         }
-        etat.setText(mishap.getPriority().toString());
-        description.setText(mishap.getDescription());
+        etat.setText("Etat : " + mishap.getPriority().toString());
+        description.setText("Description : " + mishap.getDescription());
         DownloadImagesTask downloadImagesTask = new DownloadImagesTask(usrPicture);
         downloadImagesTask.execute(mishap.getUrlPicture());
-        usrName.setText(mishap.getAuthor());
-        date.setText(mishap.getDate());
+        usrName.setText("Auteur : " + mishap.getAuthor());
+        date.setText("Date : " + mishap.getDate());
+        batiment.setText("Endroit :" + mishap.getLieu());
     }
 
     @Override
@@ -104,6 +100,7 @@ public class DetailsActivity extends FragmentActivity implements OnMapReadyCallb
         date = this.findViewById(R.id.date);
         previous = this.findViewById(R.id.previous);
         next = this.findViewById(R.id.next);
+        batiment = this.findViewById(R.id.batiment);
 
         previous.setOnClickListener(new View.OnClickListener() {
             @Override

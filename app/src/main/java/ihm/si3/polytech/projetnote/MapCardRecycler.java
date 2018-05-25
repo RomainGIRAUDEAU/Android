@@ -81,6 +81,7 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
         holder.titleMishap.setText(currentMishap.getTitle());
         //    holder.description.setText(currentMishap.getDescription());
         holder.mainLetter.setText(String.valueOf(currentMishap.getNumber()));
+        holder.batiment.setText(currentMishap.getLieu());
 
 
         //  DownloadImagesTask downloadImagesTask = new DownloadImagesTask(holder.imagePerson);
@@ -147,6 +148,7 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
         public TextView description;
         public CardView cardView;
         public TextView mainLetter;
+        public TextView batiment;
 
         public MyViewHolder2(final View view) {
             super(view);
@@ -154,6 +156,7 @@ public class MapCardRecycler extends RecyclerView.Adapter<MapCardRecycler.MyView
             //description = view.findViewById(R.id.card_description);
             mainLetter = view.findViewById(R.id.main_letter);
             cardView = view.findViewById(R.id.cv);
+            batiment = view.findViewById(R.id.batiment);
 
 
         }

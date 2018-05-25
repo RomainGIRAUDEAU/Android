@@ -15,13 +15,11 @@ import android.widget.TextView;
 
 import com.battleent.ribbonviews.RibbonLayout;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ihm.si3.polytech.projetnote.R;
 import ihm.si3.polytech.projetnote.notused.DownloadImagesTask;
-import ihm.si3.polytech.projetnote.utility.Images;
 import ihm.si3.polytech.projetnote.utility.Mishap;
 import ihm.si3.polytech.projetnote.utility.Priority;
 
@@ -44,7 +42,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         return new MyViewHolder(view);
     }
 
-    public static Bitmap decodeFromFirebaseBase64(String image) throws IOException {
+    public static Bitmap decodeFromFirebaseBase64(String image) {
         byte[] decodedByteArray = android.util.Base64.decode(image, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
     }
@@ -89,11 +87,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         holder.description.setText(currentMishap.getDescription());
         holder.username.setText(currentMishap.getAuthor());
         if(currentMishap.getImages().size() > 0 && currentMishap.getImages().get(0) != null) {
-            try {
-                holder.photoMishap.setImageBitmap(decodeFromFirebaseBase64(currentMishap.getImages().get(0)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            holder.photoMishap.setImageBitmap(decodeFromFirebaseBase64(currentMishap.getImages().get(0)));
         }
         String priority = currentMishap.getPriority().name();
         if (currentMishap.getDate() != null) {
@@ -111,6 +105,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         }
         holder.ribbonLayout.setHeaderText(priority);
         String datestr = currentMishap.getDate();
+        holder.batiment.setText(currentMishap.getLieu());
 
 
         if (datestr != null)
@@ -137,6 +132,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         public ImageView photoMishap;
         public CardView cardView;
         public RibbonLayout ribbonLayout;
+        public TextView batiment;
+
 
         public MyViewHolder(final View view) {
             super(view);
@@ -147,6 +144,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             photoMishap = view.findViewById(R.id.card_mishap);
             cardView = view.findViewById(R.id.cv);
             ribbonLayout = view.findViewById(R.id.ribbonTag);
+            batiment = view.findViewById(R.id.batiment);
 
         }
     }

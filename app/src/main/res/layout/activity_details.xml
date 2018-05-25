@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="250dip"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="#FFF">
+
+        android:background="@drawable/layout_bg">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -27,17 +27,18 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                tools:theme="@style/AppTheme">
 
                 <TextView
                     android:id="@+id/title"
+                    style="@style/AppTheme"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="3"
                     android:padding="8dp"
-                    android:text="Card View"
-                    android:textColor="#222"
-                    android:textSize="22dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -64,31 +65,42 @@
 
                 <ImageView
                     android:id="@+id/person_picture"
-                    android:layout_width="30dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/description"
                     android:layout_alignBottom="@+id/person_username"
-                    android:layout_alignStart="@+id/title"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="17dp"
                     app:srcCompat="@android:drawable/stat_sys_upload" />
 
                 <TextView
                     android:id="@+id/person_username"
                     android:layout_width="234dp"
                     android:layout_height="35dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/description"
+                    android:layout_marginStart="47dp"
                     android:padding="8dp"
-                    android:textSize="14dp"
                     android:text="username"
-                    android:layout_marginLeft="35dp"
-                    android:layout_below="@+id/description" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="234dp"
                     android:layout_height="35dp"
+                    android:layout_below="@+id/person_username"
                     android:padding="8dp"
-                    android:textSize="14dp"
                     android:text="date"
-                    android:layout_below="@+id/person_username" />
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/batiment"
+                    android:layout_width="234dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/person_picture"
+                    android:padding="8dp"
+                    android:text="batiment"
+                    android:textSize="14dp" />
 
                 <ImageButton
                     android:id="@+id/previous"
@@ -98,6 +110,7 @@
                     android:src="@android:drawable/ic_media_previous"
                     android:layout_below="@+id/date"
                     android:layout_marginTop="30dp"/>
+
 
                 <ImageView
                     android:id="@+id/imageView4"

@@ -139,7 +139,7 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
 
                         // [START_EXCLUDE]
                         String result = task.getResult();
-                        Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
                         // mMessageOutputField.setText(result);
                         // [END_EXCLUDE]
                     }
@@ -166,15 +166,16 @@ public class MapMishap extends Fragment implements OnMapReadyCallback, GoogleMap
     private void createMarker() {
 
 
-        int i = mishaps.size();
+        int i = 1;
         for (Mishap mishap : mishaps) {
 
             Marker p1 = googleMap.addMarker(new MarkerOptions().position(new LatLng(mishap.getxPos(), mishap.getyPos()))
                     .title(mishap.getTitle()).snippet(mishap.getDescription()));
             p1.setTag(i);
-            i--;
+
             mishap.setNumber(i);
             mishap.setMarker(p1);
+            i++;
 
         }
         RecyclerView recyclerView = getActivity().findViewById(R.id.my_recycler_view);

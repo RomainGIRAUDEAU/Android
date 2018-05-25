@@ -15,9 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
         card_view:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="2dp"
@@ -73,6 +70,13 @@
                     android:layout_height="35dp"
                     android:layout_below="@+id/card_title"
                     android:layout_toRightOf="@+id/card_mishap" />
+
+                <TextView
+                    android:id="@+id/batiment"
+                    android:layout_width="234dp"
+                    android:layout_height="35dp"
+                    android:layout_alignStart="@+id/card_title"
+                    android:layout_below="@+id/person_picture" />
 
                 <ImageView
                     android:id="@+id/person_picture"
